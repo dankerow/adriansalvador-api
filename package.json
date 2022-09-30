@@ -25,7 +25,7 @@
     "dayjs": "^1.11.5",
     "exifreader": "^4.5.1",
     "fastify": "4.6.0",
-    "filesize": "^9.0.11",
+    "filesize": "^10.0.5",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.10.0",
     "string-similarity": "^4.0.4"
