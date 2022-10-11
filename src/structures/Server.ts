@@ -5,7 +5,7 @@ import { readdir, stat } from 'fs/promises';
 import Fastify, { FastifyInstance } from 'fastify'
 import helmet from '@fastify/helmet'
 import cors from '@fastify/cors'
-import sentry from '@zentered/fastify-sentry'
+import sentry from '@immobiliarelabs/fastify-sentry'
 
 import { Database } from '../managers'
 import { Logger as logger } from '../utils'
@@ -54,9 +54,7 @@ export class Server {
 
     this.app.register(sentry, {
       dsn: process.env.SENTRY_DSN,
-      environment: process.env.NODE_ENV,
-      tracing: true,
-      tracesSampleRate: 1.0
+      environment: process.env.NODE_ENV
     })
 
     this.initializeDatabase();
