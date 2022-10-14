@@ -21,7 +21,7 @@
     "@fastify/helmet": "^10.0.1",
     "@immobiliarelabs/fastify-sentry": "^4.1.1",
     "@types/node": "^18.7.18",
-    "bcrypt": "^5.0.1",
+    "bcrypt": "^5.1.0",
     "dayjs": "^1.11.5",
     "exifreader": "^4.6.0",
     "fastify": "4.7.0",
