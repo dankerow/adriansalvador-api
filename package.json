@@ -18,7 +18,7 @@
   "dependencies": {
     "@fastify/compress": "^6.1.1",
     "@fastify/cors": "^8.1.0",
-    "@fastify/helmet": "^10.0.1",
+    "@fastify/helmet": "^10.0.2",
     "@immobiliarelabs/fastify-sentry": "^4.1.1",
     "@types/node": "^18.7.18",
     "bcrypt": "^5.1.0",
