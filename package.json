@@ -19,7 +19,7 @@
     "@fastify/compress": "^6.1.1",
     "@fastify/cors": "^8.2.0",
     "@fastify/helmet": "^10.1.0",
-    "@immobiliarelabs/fastify-sentry": "^4.1.2",
+    "@immobiliarelabs/fastify-sentry": "^5.0.0",
     "@types/node": "^18.11.9",
     "bcrypt": "^5.1.0",
     "dayjs": "^1.11.6",
