@@ -5,7 +5,7 @@ specifiers:
   '@fastify/cors': ^8.2.0
   '@fastify/helmet': ^10.1.0
   '@immobiliarelabs/fastify-sentry': ^5.0.0
-  '@types/node': ^18.11.10
+  '@types/node': ^18.11.12
   '@typescript-eslint/eslint-plugin': ^5.46.0
   '@typescript-eslint/parser': ^5.46.0
   bcrypt: ^5.1.0
@@ -27,7 +27,7 @@ dependencies:
   '@fastify/cors': 8.2.0
   '@fastify/helmet': 10.1.0
   '@immobiliarelabs/fastify-sentry': 5.0.0
-  '@types/node': 18.11.10
+  '@types/node': 18.11.12
   bcrypt: 5.1.0
   dayjs: 1.11.6
   exifreader: 4.8.1
@@ -1103,8 +1103,8 @@ packages:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
     dev: true
 
-  /@types/node/18.11.10:
-    resolution: {integrity: sha512-juG3RWMBOqcOuXC643OAdSA525V44cVgGV6dUDuiFtss+8Fk5x1hI93Rsld43VeJVIeqlP9I7Fn9/qaVqoEAuQ==}
+  /@types/node/18.11.12:
+    resolution: {integrity: sha512-FgD3NtTAKvyMmD44T07zz2fEf+OKwutgBCEVM8GcvMGVGaDktiLNTDvPwC/LUe3PinMW+X6CuLOF2Ui1mAlSXg==}
     dev: false
 
   /@types/semver/7.3.13:
@@ -1118,7 +1118,7 @@ packages:
   /@types/whatwg-url/8.2.2:
     resolution: {integrity: sha512-FtQu10RWgn3D9U4aazdwIE2yzphmTJREDqNdODHrbrZmmMqI0vMheC/6NE/J1Yveaj8H+ela+YwWTjq5PGmuhA==}
     dependencies:
-      '@types/node': 18.11.10
+      '@types/node': 18.11.12
       '@types/webidl-conversions': 7.0.0
     dev: false
 
