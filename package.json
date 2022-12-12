@@ -23,7 +23,7 @@
     "@types/node": "^18.11.13",
     "bcrypt": "^5.1.0",
     "dayjs": "^1.11.7",
-    "exifreader": "^4.8.1",
+    "exifreader": "^4.9.0",
     "fastify": "4.10.2",
     "filesize": "^10.0.5",
     "jsonwebtoken": "^8.5.1",
