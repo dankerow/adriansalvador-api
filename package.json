@@ -20,7 +20,7 @@
     "@fastify/cors": "^8.2.0",
     "@fastify/helmet": "^10.1.0",
     "@immobiliarelabs/fastify-sentry": "^5.0.0",
-    "@types/node": "^18.11.13",
+    "@types/node": "^18.11.14",
     "bcrypt": "^5.1.0",
     "dayjs": "^1.11.7",
     "exifreader": "^4.9.0",
