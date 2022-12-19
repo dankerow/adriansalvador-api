@@ -16,7 +16,7 @@ specifiers:
   fastify: 4.10.2
   filesize: ^10.0.6
   jsonwebtoken: ^8.5.1
-  mongodb: ^4.12.1
+  mongodb: ^4.13.0
   nodemon: ^2.0.20
   string-similarity: ^4.0.4
   tsx: ^3.12.1
@@ -34,7 +34,7 @@ dependencies:
   fastify: 4.10.2
   filesize: 10.0.6
   jsonwebtoken: 8.5.1
-  mongodb: 4.12.1
+  mongodb: 4.13.0
   string-similarity: 4.0.4
 
 devDependencies:
@@ -2528,8 +2528,8 @@ packages:
       whatwg-url: 11.0.0
     dev: false
 
-  /mongodb/4.12.1:
-    resolution: {integrity: sha512-koT87tecZmxPKtxRQD8hCKfn+ockEL2xBiUvx3isQGI6mFmagWt4f4AyCE9J4sKepnLhMacoCTQQA6SLAI2L6w==}
+  /mongodb/4.13.0:
+    resolution: {integrity: sha512-+taZ/bV8d1pYuHL4U+gSwkhmDrwkWbH1l4aah4YpmpscMwgFBkufIKxgP/G7m87/NUuQzc2Z75ZTI7ZOyqZLbw==}
     engines: {node: '>=12.9.0'}
     dependencies:
       bson: 4.7.0
