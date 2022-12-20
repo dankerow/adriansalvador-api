@@ -27,7 +27,7 @@
     "fastify": "4.10.2",
     "filesize": "^10.0.6",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^4.12.1",
+    "mongodb": "^4.13.0",
     "string-similarity": "^4.0.4"
   },
   "devDependencies": {
