@@ -12,7 +12,7 @@ specifiers:
   dayjs: ^1.11.7
   dotenv: ^16.0.3
   eslint: ^8.30.0
-  exifreader: ^4.9.0
+  exifreader: ^4.9.1
   fastify: 4.10.2
   filesize: ^10.0.6
   jsonwebtoken: ^8.5.1
@@ -30,7 +30,7 @@ dependencies:
   '@types/node': 18.11.17
   bcrypt: 5.1.0
   dayjs: 1.11.7
-  exifreader: 4.9.0
+  exifreader: 4.9.1
   fastify: 4.10.2
   filesize: 10.0.6
   jsonwebtoken: 8.5.1
@@ -1953,8 +1953,8 @@ packages:
     engines: {node: '>=0.8.x'}
     dev: false
 
-  /exifreader/4.9.0:
-    resolution: {integrity: sha512-FuBewdeXxseIw4wHT1BVBF44S1H1Dgfk7CtLnzatiyKE6Mgg5OM0VfWzOttVVqEDUQGujdEX/ggjoWKbZJEEBQ==}
+  /exifreader/4.9.1:
+    resolution: {integrity: sha512-lcVG6VuSkPVHdmM6HybcVWaE8iO4Qq68qFPCRM6U3kz0JODqw4mjMySJ1nZSHfAnrfsIYGfN9A2vh96b3LAF1g==}
     requiresBuild: true
     optionalDependencies:
       '@xmldom/xmldom': 0.7.9
