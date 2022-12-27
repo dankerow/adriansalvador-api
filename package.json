@@ -20,7 +20,6 @@
     "@fastify/cors": "^8.2.0",
     "@fastify/helmet": "^10.1.0",
     "@immobiliarelabs/fastify-sentry": "^5.0.1",
-    "@types/node": "^18.11.17",
     "bcrypt": "^5.1.0",
     "dayjs": "^1.11.7",
     "exifreader": "^4.9.1",
@@ -31,8 +30,9 @@
     "string-similarity": "^4.0.4"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.47.0",
-    "@typescript-eslint/parser": "^5.47.0",
+    "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "^5.47.1",
+    "@typescript-eslint/parser": "^5.47.1",
     "dotenv": "^16.0.3",
     "eslint": "^8.30.0",
     "nodemon": "^2.0.20",
@@ -46,5 +46,5 @@
     ],
     "delay": 2500
   },
-  "packageManager": "pnpm@7.19.0"
+  "packageManager": "pnpm@7.20.0"
 }
