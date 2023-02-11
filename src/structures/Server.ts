@@ -1,6 +1,6 @@
-import { dirname, join, relative } from 'path';
-import { fileURLToPath } from 'url';
-import { readdir, stat } from 'fs/promises';
+import { dirname, join, relative } from 'path'
+import { fileURLToPath } from 'url'
+import { readdir, stat } from 'fs/promises'
 
 import Fastify, { FastifyInstance } from 'fastify'
 import helmet from '@fastify/helmet'
@@ -9,7 +9,7 @@ import sentry from '@immobiliarelabs/fastify-sentry'
 
 import { Database } from '../managers'
 import { Logger as logger } from '../utils'
-import { Route } from './Route';
+import { Route } from './Route'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -26,10 +26,10 @@ export class Server {
       logger: true
     })
 
-    this.routers = [];
+    this.routers = []
 
-    this.logger = logger;
-    this.database = new Database();
+    this.logger = logger
+    this.database = new Database()
   }
 
   public setup(): void {
@@ -54,10 +54,11 @@ export class Server {
 
     this.app.register(sentry, {
       dsn: process.env.SENTRY_DSN,
-      environment: process.env.NODE_ENV
+      environment: process.env.NODE_ENV,
+      tracesSampleRate: 1.0
     })
 
-    this.initializeDatabase();
+    this.initializeDatabase()
   }
 
   /**
@@ -66,12 +67,12 @@ export class Server {
    * @returns void
    */
   private async initializeDatabase(): Promise<void> {
-    await this.database.connect();
+    await this.database.connect()
     this.app.decorate('database', this.database)
 
     process.send({ type: 'log', content: 'Successfully connected to database.' })
 
-    await this.loadRoutes(join('src', 'routes'));
+    await this.loadRoutes(join('src', 'routes'))
   }
 
   /**
@@ -82,34 +83,34 @@ export class Server {
    * @private
    */
   private async loadRoutes(directory: string, prefix: string | boolean = false): Promise<void> {
-    const routes = await readdir(directory);
+    const routes = await readdir(directory)
 
     if (routes.length > 0) {
       for (let i = 0; i < routes.length; i++) {
-        const stats = await stat(join(directory, routes[i]));
+        const stats = await stat(join(directory, routes[i]))
 
         if (stats.isDirectory()) {
           await this.loadRoutes(join(directory, routes[i]), routes[i].replace('/', ''))
           return
         } else {
           const routeFile = relative(__dirname, join(directory, routes[i])).replaceAll('\\', '/')
-          const routeImport = await import(routeFile);
-          const RouteClass = routeImport.default;
-          const route = new RouteClass(this);
+          const routeImport = await import(routeFile)
+          const RouteClass = routeImport.default
+          const route = new RouteClass(this)
 
           if (prefix) {
-            route.path = `/${prefix}${route.path}`;
+            route.path = `/${prefix}${route.path}`
           }
 
-          this.routers.push(route);
+          this.routers.push(route)
         }
 
         if (i + 1 === routes.length) {
-          this.registerRoutes();
+          this.registerRoutes()
         }
       }
     } else {
-      this.listen();
+      this.listen()
     }
   }
 
@@ -120,26 +121,26 @@ export class Server {
    */
   private registerRoutes(): void {
     this.routers.sort((a, b) => {
-      if (a.position > b.position) return 1;
-      if (b.position > a.position) return -1;
-      return 0;
-    });
+      if (a.position > b.position) return 1
+      if (b.position > a.position) return -1
+      return 0
+    })
 
     for (let i = 0; i < this.routers.length; i++) {
-      this.app.register(this.routers[i].routes, { prefix: this.routers[i].path });
+      this.app.register(this.routers[i].routes, { prefix: this.routers[i].path })
 
       if (i + 1 === this.routers.length) {
-        process.send({ type: 'log', content: `Loaded ${this.routers.length} routes.` });
+        process.send({ type: 'log', content: `Loaded ${this.routers.length} routes.` })
 
-        this.listen();
+        this.listen()
       }
     }
   }
 
   private listen(): void {
     this.app.listen( { port: parseInt(process.env.PORT) }, (error, address) => {
-      if (error) return process.send({ type: 'error', content: error.stack || error });
-      return process.send({ type: 'log', content: `Running on ${address}` });
+      if (error) return process.send({ type: 'error', content: error.stack || error })
+      return process.send({ type: 'log', content: `Running on ${address}` })
     });
   }
 }
