@@ -20,6 +20,6 @@ export default class Sitemap extends Route {
       return routes
     });
 
-    done();
+    done()
   }
 }

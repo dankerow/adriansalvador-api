@@ -6,7 +6,7 @@ export default class Images extends Route {
     super({
       position: 2,
       path: '/images'
-    });
+    })
   }
 
   routes(app, options, done) {
@@ -30,6 +30,6 @@ export default class Images extends Route {
       res.status(204)
     });
 
-    done();
+    done()
   }
 }

@@ -11,30 +11,30 @@ export default class Albums extends Route {
     super({
       position: 2,
       path: '/albums'
-    });
+    })
   }
 
   routes(app, options, done) {
     const getAlbum = async (req, res) => {
-      if (!req.params.id) return res.code(404).send({ error: { status: 404, message: 'Album not found' } });
+      if (!req.params.id) return res.code(404).send({ error: { status: 404, message: 'Album not found' } })
 
-      const album = await app.database.getAlbumById(req.params.id);
+      const album = await app.database.getAlbumById(req.params.id)
 
-      if (!album) return res.code(404).send({ error: { status: 404, message: 'Album not found' } });
+      if (!album) return res.code(404).send({ error: { status: 404, message: 'Album not found' } })
 
-      return album;
+      return album
     }
 
     app.get('/', async (req) => {
       let albums = await app.database.getAlbumsSorted()
 
-      const search = req.query.search ? req.query.search.toLowerCase() : null;
+      const search = req.query.search ? req.query.search.toLowerCase() : null
 
       if (search && search.length > 0) {
         albums = albums
           .filter((album) => {
             return album.name.toLowerCase().includes(search)
-              || stringSimilarity.compareTwoStrings(album.name, search) > 0.5;
+              || stringSimilarity.compareTwoStrings(album.name, search) > 0.5
           })
         /* .sort((a, b) => {
           if (a.name.toLowerCase() === search && b.name.toLowerCase() !== search) return -Infinity;
@@ -63,13 +63,13 @@ export default class Albums extends Route {
       const pages = (albumCount) => Math.ceil(albumCount / limit)
 
       const count = albums.length
-      albums = albums.slice((page - 1) * limit, page * limit);
+      albums = albums.slice((page - 1) * limit, page * limit)
 
       for (const album of albums) {
         album.url = `/albums/${album.id}`
         album.fileCount = (await app.database.getAlbumFileCount(album.id)).count
         album.createdAt = dayjs(album.createdAt).format('MMM D, YYYY');
-        album.modifiedAt = dayjs(album.modifiedAt).format('MMM D, YYYY');
+        album.modifiedAt = dayjs(album.modifiedAt).format('MMM D, YYYY')
       }
 
       return {
@@ -106,23 +106,23 @@ export default class Albums extends Route {
       const album = await getAlbum(req, res)
 
       album.fileCount = (await app.database.getAlbumFileCount(album.id)).count
-      album.createdAt = dayjs(album.createdAt).format('MMM D, YYYY');
-      album.modifiedAt = dayjs(album.modifiedAt).format('MMM D, YYYY');
+      album.createdAt = dayjs(album.createdAt).format('MMM D, YYYY')
+      album.modifiedAt = dayjs(album.modifiedAt).format('MMM D, YYYY')
 
       const page = req.query.page ? parseInt(req.query.page) : 1
       const limit = req.query.limit ? parseInt(req.query.limit) : 25
       const includeImages = req.query.includeImages ? Boolean(req.query.includeImages) : false
-      const pages = (imageCount) => Math.ceil(imageCount / limit);
+      const pages = (imageCount) => Math.ceil(imageCount / limit)
 
       if (includeImages) {
         let images = await app.database.getAlbumFiles(album.id)
         const count = images.length
-        images = images.slice((page - 1) * limit, page * limit);
+        images = images.slice((page - 1) * limit, page * limit)
 
         for (const image of images) {
           image.size = filesize(image.size)
-          image.createdAt = dayjs(image.createdAt).format('MMM D, YYYY');
-          image.modifiedAt = dayjs(image.modifiedAt).format('MMM D, YYYY');
+          image.createdAt = dayjs(image.createdAt).format('MMM D, YYYY')
+          image.modifiedAt = dayjs(image.modifiedAt).format('MMM D, YYYY')
 
           const host = process.env.NODE_ENV === 'production' ? process.env.CDN_BASE_URL : process.env.CDN_BASE_URL_DEV
 
@@ -165,10 +165,10 @@ export default class Albums extends Route {
         nsfw: Boolean(req.body.nsfw),
         hidden: Boolean(req.body.hidden),
         modifiedAt: +new Date()
-      };
+      }
 
       try {
-        await app.database.updateAlbum(album.id, entry);
+        await app.database.updateAlbum(album.id, entry)
 
         const oldAlbumPath = join('src', 'static', 'gallery', album.name)
         const newAlbumPath = join('src', 'static', 'gallery', entry.name)
@@ -181,7 +181,7 @@ export default class Albums extends Route {
         await rename(oldAlbumArchivePath, newAlbumArchivePath)
       } catch (error) {
         app.logger.error(error.stack || error);
-        res.code(500).send({ error: { status: 500, message: 'Something went wrong while updating the album in the database.' } });
+        res.code(500).send({ error: { status: 500, message: 'Something went wrong while updating the album in the database.' } })
       }
     });
 
@@ -199,6 +199,6 @@ export default class Albums extends Route {
       res.code(204)
     });
 
-    done();
+    done()
   }
 }

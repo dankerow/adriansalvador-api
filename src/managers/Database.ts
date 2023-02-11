@@ -7,36 +7,36 @@ export class Database extends EventEmitter {
   private mongoUsers: Db;
 
   constructor() {
-    super();
+    super()
 
-    this.client = new MongoClient(process.env.MONGO_URI, { minPoolSize: 12 });
-    this.mongoCDN = null;
-    this.mongoUsers = null;
+    this.client = new MongoClient(process.env.MONGO_URI, { minPoolSize: 12 })
+    this.mongoCDN = null
+    this.mongoUsers = null
   }
 
   async connect() {
     await this.client.connect()
       .then(() => {
-        this.mongoCDN = this.client.db(process.env.MONGO_CDN_DATABASE);
-        this.mongoUsers = this.client.db(process.env.MONGO_USERS_DATABASE);
+        this.mongoCDN = this.client.db(process.env.MONGO_CDN_DATABASE)
+        this.mongoUsers = this.client.db(process.env.MONGO_USERS_DATABASE)
 
-        this.emit('ready');
+        this.emit('ready')
       })
       .catch((err) => {
-        this.emit('error', err);
+        this.emit('error', err)
       })
   }
 
   getUserById(id) {
     return this.mongoUsers
       .collection('metadata')
-      .findOne({ id });
+      .findOne({ id })
   }
 
   getUserByEmail(email) {
     return this.mongoUsers
       .collection('credentials')
-      .findOne({ email });
+      .findOne({ email })
   }
 
   getUsersSorted() {
@@ -46,20 +46,20 @@ export class Database extends EventEmitter {
         { $addFields: { lowerName: { $toLower: '$firstName' } } }
       ])
       .sort({ firstName: 1 })
-      .toArray();
+      .toArray()
   }
 
   getAlbumById(id) {
     return this.mongoCDN
       .collection('albums')
-      .findOne({ id });
+      .findOne({ id })
   }
 
   getAllAlbums() {
     return this.mongoCDN
       .collection('albums')
       .find()
-      .toArray();
+      .toArray()
   }
 
   getAlbumsSorted() {
@@ -75,13 +75,13 @@ export class Database extends EventEmitter {
           }
         })
       .sort({ name: 1 })
-      .toArray();
+      .toArray()
   }
 
   getAlbumCount() {
     return this.mongoCDN
       .collection('albums')
-      .countDocuments();
+      .countDocuments()
   }
 
   getRandomImages(limit) {
@@ -90,7 +90,7 @@ export class Database extends EventEmitter {
       .aggregate([
         { $sample: { size: limit } }
       ])
-      .toArray();
+      .toArray()
   }
 
   getAlbumFiles(albumId) {
@@ -99,7 +99,7 @@ export class Database extends EventEmitter {
       .aggregate([
         { $match: { albumId } },
       ])
-      .toArray();
+      .toArray()
   }
 
   getAlbumFileCount(albumId) {
@@ -110,14 +110,14 @@ export class Database extends EventEmitter {
         { $count: 'count' }
       ])
       .limit(1)
-      .next();
+      .next()
   }
 
   getAlbumFilesWithFields(id, fields) {
-    const project = {};
+    const project = {}
 
     for (let i = 0; i < fields.length; i++) {
-      project[fields[i]] = '$' + fields[i];
+      project[fields[i]] = '$' + fields[i]
     }
 
     return this.mongoCDN
@@ -126,7 +126,7 @@ export class Database extends EventEmitter {
         { $match: { albumId: { $in: [id] } } },
         { $project: { _id: 0, ...project } }
       ])
-      .toArray();
+      .toArray()
   }
 
   getAlbumFilesPaginated(id, skip, limit) {
@@ -137,7 +137,7 @@ export class Database extends EventEmitter {
       ])
       .skip(skip)
       .limit(limit)
-      .toArray();
+      .toArray()
   }
 
   getFile(name, size) {
@@ -147,7 +147,7 @@ export class Database extends EventEmitter {
         { $match: { name, size } },
       ])
       .limit(1)
-      .next();
+      .next()
   }
 
   findAlbumByName(name) {
@@ -158,7 +158,7 @@ export class Database extends EventEmitter {
         { $match: { name } }
       ])
       .limit(1)
-      .next();
+      .next()
   }
 
   findFileByName(name) {
@@ -168,48 +168,48 @@ export class Database extends EventEmitter {
         { $match: { name } }
       ])
       .limit(1)
-      .next();
+      .next()
   }
 
   insertAlbum(document) {
     return this.mongoCDN
       .collection('albums')
-      .insertOne(document);
+      .insertOne(document)
   }
 
   insertFile(document) {
     return this.mongoCDN
       .collection('files')
-      .insertOne(document);
+      .insertOne(document)
   }
 
   updateUserSession(id, fields) {
     return this.mongoUsers
       .collection('sessions')
-      .updateOne({ id }, { $set: fields });
+      .updateOne({ id }, { $set: fields })
   }
 
   updateAlbum(id, fields) {
     return this.mongoCDN
       .collection('albums')
-      .updateOne({ id }, { $set: fields });
+      .updateOne({ id }, { $set: fields })
   }
 
   updateFile(id, fields) {
     return this.mongoCDN
       .collection('files')
-      .updateOne({ id }, { $set: fields });
+      .updateOne({ id }, { $set: fields })
   }
 
   deleteAlbum(id) {
     return this.mongoCDN
       .collection('albums')
-      .deleteOne({ id });
+      .deleteOne({ id })
   }
 
   deleteAlbumFiles(albumId) {
     return this.mongoCDN
       .collection('files')
-      .deleteMany({ albumId });
+      .deleteMany({ albumId })
   }
 }

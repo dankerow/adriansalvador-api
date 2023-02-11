@@ -5,7 +5,7 @@ export default class Health extends Route {
     super({
       position: 1,
       path: '/health'
-    });
+    })
   }
 
   routes(app, options, done) {
@@ -26,6 +26,6 @@ export default class Health extends Route {
       }
     });
 
-    done();
+    done()
   }
 }
