@@ -3,7 +3,7 @@ import crypto from 'node:crypto'
 import { rename, rm } from 'fs/promises'
 import { join } from 'path'
 import dayjs from 'dayjs'
-import fileSize from 'filesize'
+import { filesize } from 'filesize'
 import stringSimilarity from 'string-similarity'
 
 export default class Albums extends Route {
@@ -25,10 +25,10 @@ export default class Albums extends Route {
       return album;
     }
 
-    app.get('/', async (req, res) => {
+    app.get('/', async (req) => {
       let albums = await app.database.getAlbumsSorted()
 
-      const search = req.query.s ? req.query.s.toLowerCase() : null;
+      const search = req.query.search ? req.query.search.toLowerCase() : null;
 
       if (search && search.length > 0) {
         albums = albums
@@ -120,7 +120,7 @@ export default class Albums extends Route {
         images = images.slice((page - 1) * limit, page * limit);
 
         for (const image of images) {
-          image.size = fileSize(image.size)
+          image.size = filesize(image.size)
           image.createdAt = dayjs(image.createdAt).format('MMM D, YYYY');
           image.modifiedAt = dayjs(image.modifiedAt).format('MMM D, YYYY');
 
