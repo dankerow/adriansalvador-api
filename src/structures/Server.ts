@@ -5,6 +5,7 @@ import { readdir, stat } from 'fs/promises'
 import Fastify, { FastifyInstance } from 'fastify'
 import helmet from '@fastify/helmet'
 import cors from '@fastify/cors'
+import rateLimit from '@fastify/rate-limit'
 import sentry from '@immobiliarelabs/fastify-sentry'
 
 import { Database } from '../managers'
@@ -39,8 +40,16 @@ export class Server {
 
     this.app.register(cors, {
       allowedHeaders: ['Accept', 'Origin', 'Authorization', 'Cache-Control', 'X-Requested-With', 'Content-Type', 'finishedChunks'],
-      methods: ['GET', 'POST']
+      methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH']
     })
+
+    this.app.register(rateLimit,
+      {
+        global : false,
+        max: 100,
+        keyGenerator: (req) => req.headers.authorization || req.ip,
+        errorResponseBuilder: () => ({ status: 429, message: 'Too many requests, please you need to slow down, try again later.' })
+      });
 
     this.app.setErrorHandler((error, req, reply) => {
       logger.error(`Something went wrong.\nError: ${error.stack || error}`)
