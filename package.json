@@ -27,7 +27,7 @@
     "fastify": "4.13.0",
     "filesize": "^10.0.6",
     "jsonwebtoken": "^9.0.0",
-    "mongodb": "^5.0.1",
+    "mongodb": "^5.1.0",
     "ofetch": "^1.0.1",
     "string-similarity": "^4.0.4"
   },
