@@ -2,6 +2,8 @@ import { Route } from '../structures'
 import bcrypt from 'bcrypt';
 import dayjs from 'dayjs'
 import utcPlugin from 'dayjs/plugin/utc'
+import crypto from 'node:crypto'
+import { generatePassword } from '../utils'
 dayjs.extend(utcPlugin)
 
 export default class Users extends Route {
@@ -9,7 +11,7 @@ export default class Users extends Route {
     super({
       position: 1,
       path: '/users'
-    });
+    })
   }
 
   async routes(app, options, done) {
@@ -35,23 +37,74 @@ export default class Users extends Route {
       const pages = (userCount) => Math.ceil(userCount / limit)
 
       const count = users.length
-      users = users.slice((page - 1) * limit, page * limit);
+      users = users.slice((page - 1) * limit, page * limit)
 
       return {
         data: users,
         count,
         pages: pages(count)
       }
-    });
+    })
 
     const authMiddleware = await import('../middlewares/auth.js')
+
+    app.post('/', {
+      config: { rateLimit: { max: 5, timeWindow: 1000 } },
+      preHandler: [authMiddleware.default]
+    }, async (req, res) => {
+      if (!('firstName' in req.body)) return res.code(400).send({ error: { status: 400, message: 'Missing "lastName" field from request body.' } })
+      if (!('lastName' in req.body)) return res.code(400).send({ error: { status: 400, message: 'Missing "lastName" field from request body.' } })
+      if (!('email' in req.body)) return res.code(400).send({ error: { status: 400, message: 'Missing "email" field from request body.' } })
+      // if (!('role' in req.body)) return res.code(400).send({ error: { status: 400, message: 'Missing "role" field from request body.' } })
+
+      if (typeof req.body.firstName !== 'string') return res.code(400).send({ error: { status: 400, message: 'An invalid firstName was provided. The firstName must be a string.' } })
+      if (typeof req.body.lastName !== 'string') return res.code(400).send({ error: { status: 400, message: 'An invalid lastName was provided. The lastName must be a string.' } })
+      if (typeof req.body.email !== 'string') return res.code(400).send({ error: { status: 400, message: 'An invalid email was provided. The email must be a string.' } })
+
+      const user = await app.database.getUserByEmail(req.body.email)
+      if (user) return res.code(409).send({ error: { status: 409, message: 'User already created.' } })
+
+      const userId = crypto.randomUUID()
+
+      const metadata = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        role: req.body.role ?? 'user',
+        avatar: '',
+        createdAt: +new Date(),
+        modifiedAt: +new Date()
+      }
+
+      const credentials = {
+        email: req.body.email,
+        password: generatePassword(16),
+        createdAt: +new Date(),
+        modifiedAt: +new Date()
+      }
+
+      console.warn('Credentials:', credentials.email, credentials.password)
+
+      credentials.password = bcrypt.hashSync(credentials.password, 10)
+
+      await app.database.insertUserMetadata({ id: userId, ...metadata })
+      await app.database.insertUserCredentials({ id: userId, ...credentials })
+
+      return { id: userId, ...metadata }
+    })
+
+    app.get('/@me', {
+      config: { rateLimit: { max: 5, timeWindow: 1000 } },
+      preHandler: [authMiddleware.default]
+    }, async (req, res) => {
+      return await getUser(req, res)
+    })
 
     app.get('/:id', {
       config: { rateLimit: { max: 5, timeWindow: 1000 } },
       preHandler: [authMiddleware.default]
     }, async (req, res) => {
       return await getUser(req, res)
-    });
+    })
 
     app.post('/:id/password/update', async (req, res) => {
       const { password, newPassword } = req.body;
