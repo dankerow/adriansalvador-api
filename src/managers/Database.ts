@@ -30,13 +30,44 @@ export class Database extends EventEmitter {
   getUserById(id) {
     return this.mongoUsers
       .collection('metadata')
-      .findOne({ id })
+      .aggregate([
+        { $match: { id } },
+        { $lookup: { from: 'credentials', localField: 'id', foreignField: 'id', as: 'credentials' } },
+        {
+          $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$credentials", 0 ] }, "$$ROOT" ] } }
+        },
+        { $project: { credentials: 0 } },
+        { $unset: [ '_id', 'password' ] }
+      ])
+      .limit(1)
+      .next()
   }
 
   getUserByEmail(email) {
     return this.mongoUsers
       .collection('credentials')
-      .findOne({ email })
+      .aggregate([
+        { $match: { email } },
+        { $lookup: { from: 'metadata', localField: 'id', foreignField: 'id', as: 'metadata' } },
+        {
+          $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$metadata", 0 ] }, "$$ROOT" ] } }
+        },
+        { $project: { metadata: 0 } },
+        { $unset: [ '_id', 'password' ] }
+      ])
+      .limit(1)
+      .next()
+  }
+
+  getUserCredentials(id) {
+    return this.mongoUsers
+      .collection('credentials')
+      .aggregate([
+        { $match: { id } },
+        { $unset: [ '_id' ] }
+      ])
+      .limit(1)
+      .next()
   }
 
   getUsersSorted() {
@@ -52,21 +83,36 @@ export class Database extends EventEmitter {
   getAlbumById(id) {
     return this.mongoCDN
       .collection('albums')
-      .findOne({ id })
+      .aggregate([
+        { $match: { id } },
+        { $lookup: { from: 'files', localField: 'coverId', foreignField: 'id', as: 'cover' } },
+        { $addFields: { cover: { $arrayElemAt: ['$cover', 0] } } },
+        { $unset: [ '_id', 'cover.id', 'cover.type', 'cover.size' ] }
+      ])
+      .limit(1)
+      .next()
   }
 
   getAllAlbums() {
     return this.mongoCDN
       .collection('albums')
-      .find()
-      .toArray()
+      .aggregate([
+        { $lookup: { from: 'files', localField: 'coverId', foreignField: 'id', as: 'cover' } },
+        { $addFields: { cover: { $arrayElemAt: ['$cover', 0] } } },
+        { $unset: [ '_id', 'cover.id', 'cover.type', 'cover.size' ] }
+      ])
+      .limit(-1)
+      .next()
   }
 
   getAlbumsSorted() {
     return this.mongoCDN
       .collection('albums')
       .aggregate([
-        { $addFields: { name: { $toLower: '$name' } } }
+        { $addFields: { name: { $toLower: '$name' } } },
+        { $lookup: { from: 'files', localField: 'coverId', foreignField: 'id', as: 'cover' } },
+        { $addFields: { cover: { $arrayElemAt: ['$cover', 0] } } },
+        { $unset: [ '_id', 'cover.id', 'cover.type', 'cover.size' ] }
       ],
         {
           collation: {
@@ -77,6 +123,18 @@ export class Database extends EventEmitter {
       .sort({ name: 1 })
       .toArray()
   }
+
+  getAlbumsPaginated(id, skip, limit) {
+    return this.mongoCDN
+      .collection('albums')
+      .aggregate([
+        { $match: { $in: [id] } },
+      ])
+      .skip(skip)
+      .limit(limit)
+      .toArray()
+  }
+
 
   getAlbumCount() {
     return this.mongoCDN
@@ -98,6 +156,7 @@ export class Database extends EventEmitter {
       .collection('files')
       .aggregate([
         { $match: { albumId } },
+        { $unset: [ "_id" ] }
       ])
       .toArray()
   }
@@ -140,11 +199,16 @@ export class Database extends EventEmitter {
       .toArray()
   }
 
-  getFile(name, size) {
-    return this.mongoCDN
-      .collection('files')
+  getFileById(id, includeAlbum = false) {
+    const collection = this.mongoCDN.collection('files')
+
+    if (!includeAlbum) return collection.findOne({ id })
+
+    return collection
       .aggregate([
-        { $match: { name, size } },
+        { $match: { id } },
+        { $lookup: { from: 'albums', localField: 'albumId', foreignField: 'id', as: 'album' } },
+        { $unset: [ "_id" ] }
       ])
       .limit(1)
       .next()
@@ -165,10 +229,23 @@ export class Database extends EventEmitter {
     return this.mongoCDN
       .collection('files')
       .aggregate([
+        { $addFields: { name: { $toLower: '$name' } } },
         { $match: { name } }
       ])
       .limit(1)
       .next()
+  }
+
+  insertUserMetadata(document) {
+    return this.mongoUsers
+      .collection('metadata')
+      .insertOne(document)
+  }
+
+  insertUserCredentials(document) {
+    return this.mongoUsers
+      .collection('credentials')
+      .insertOne(document)
   }
 
   insertAlbum(document) {
@@ -211,5 +288,11 @@ export class Database extends EventEmitter {
     return this.mongoCDN
       .collection('files')
       .deleteMany({ albumId })
+  }
+
+  deleteFile(id) {
+    return this.mongoCDN
+      .collection('files')
+      .deleteOne({ id })
   }
 }
