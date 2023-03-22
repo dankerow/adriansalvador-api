@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyServerOptions, DoneFuncWithErrOrRes } from 'fastify'
 
 export interface RouteOptions {
-  position: number,
+  position: number
   path: string
 }
 
