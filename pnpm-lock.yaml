@@ -7,7 +7,7 @@ specifiers:
   '@fastify/rate-limit': ^8.0.0
   '@google-analytics/data': ^3.2.1
   '@immobiliarelabs/fastify-sentry': ^5.0.2
-  '@types/node': ^18.15.5
+  '@types/node': ^18.15.6
   '@typescript-eslint/eslint-plugin': ^5.56.0
   '@typescript-eslint/parser': ^5.56.0
   bcrypt: ^5.1.0
@@ -43,7 +43,7 @@ dependencies:
 
 devDependencies:
   '@fastify/rate-limit': 8.0.0
-  '@types/node': 18.15.5
+  '@types/node': 18.15.6
   '@typescript-eslint/eslint-plugin': 5.56.0_iskin7c6dxqunwflhstekcjqmq
   '@typescript-eslint/parser': 5.56.0_vgl77cfdswitgr47lm5swmv43m
   dotenv: 16.0.3
@@ -234,7 +234,7 @@ packages:
     engines: {node: ^8.13.0 || >=10.10.0}
     dependencies:
       '@grpc/proto-loader': 0.7.5
-      '@types/node': 18.15.5
+      '@types/node': 18.15.6
     dev: false
 
   /@grpc/proto-loader/0.7.5:
@@ -422,7 +422,7 @@ packages:
     resolution: {integrity: sha512-IO+MJPVhoqz+28h1qLAcBEH2+xHMK6MTyHJc7MTnnYb6wsoLR29POVGJ7LycmVXIqyy/4/2ShP5sUwTXuOwb/w==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 18.15.5
+      '@types/node': 18.15.6
     dev: false
 
   /@types/json-schema/7.0.11:
@@ -452,14 +452,14 @@ packages:
     resolution: {integrity: sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==}
     dev: false
 
-  /@types/node/18.15.5:
-    resolution: {integrity: sha512-Ark2WDjjZO7GmvsyFFf81MXuGTA/d6oP38anyxWOL6EREyBKAxKoFHwBhaZxCfLRLpO8JgVXwqOwSwa7jRcjew==}
+  /@types/node/18.15.6:
+    resolution: {integrity: sha512-YErOafCZpK4g+Rp3Q/PBgZNAsWKGunQTm9FA3/Pbcm0VCriTEzcrutQ/SxSc0rytAp0NoFWue669jmKhEtd0sA==}
 
   /@types/rimraf/3.0.2:
     resolution: {integrity: sha512-F3OznnSLAUxFrCEu/L5PY8+ny8DtcFRjx7fZZ9bycvXRi3KPTRS9HOitGZwvPg0juRhXFWIeKX58cnX5YqLohQ==}
     dependencies:
       '@types/glob': 8.1.0
-      '@types/node': 18.15.5
+      '@types/node': 18.15.6
     dev: false
 
   /@types/semver/7.3.13:
@@ -473,7 +473,7 @@ packages:
   /@types/whatwg-url/8.2.2:
     resolution: {integrity: sha512-FtQu10RWgn3D9U4aazdwIE2yzphmTJREDqNdODHrbrZmmMqI0vMheC/6NE/J1Yveaj8H+ela+YwWTjq5PGmuhA==}
     dependencies:
-      '@types/node': 18.15.5
+      '@types/node': 18.15.6
       '@types/webidl-conversions': 7.0.0
     dev: false
 
@@ -2432,7 +2432,7 @@ packages:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 18.15.5
+      '@types/node': 18.15.6
       long: 5.2.1
     dev: false
 
