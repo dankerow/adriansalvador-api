@@ -1,4 +1,3 @@
-import 'dotenv/config'
 import { Server } from '../structures'
 
 const server = new Server()
