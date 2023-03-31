@@ -93,48 +93,31 @@ export class Database extends EventEmitter {
 			.next()
 	}
 
-	getAllAlbums() {
-		return this.mongoCDN
-			.collection('albums')
-			.aggregate([
-				{ $lookup: { from: 'files', localField: 'coverId', foreignField: 'id', as: 'cover' } },
-				{ $addFields: { cover: { $arrayElemAt: ['$cover', 0] } } },
-				{ $unset: [ '_id', 'cover.id', 'cover.type', 'cover.size' ] }
-			])
-			.limit(-1)
-			.next()
-	}
+	getAlbums(params) {
+		const aggregation = []
+		if (params.favorite) aggregation.push({ $match: { favorite: true } })
+		if (params.featured) aggregation.push({ $match: { featured: true } })
+		if (params.search) aggregation.push({ $match: { name: { $regex: params.search, $options: 'i' } } })
+		if (params.sort) aggregation.push({ $sort: params.sort })
+		if (params.skip) aggregation.push({ $skip: params.skip })
+		if (params.limit) aggregation.push({ $limit: params.limit })
 
-	getAlbumsSorted() {
 		return this.mongoCDN
 			.collection('albums')
 			.aggregate([
-				{ $addFields: { name: { $toLower: '$name' } } },
+				...aggregation,
 				{ $lookup: { from: 'files', localField: 'coverId', foreignField: 'id', as: 'cover' } },
 				{ $addFields: { cover: { $arrayElemAt: ['$cover', 0] } } },
-				{ $unset: [ '_id', 'cover.id', 'cover.type', 'cover.size' ] }
-			],
-			{
+				{ $unset: [ 'cover._id', 'cover.id', 'cover.type', 'cover.size', 'cover.albumId' ] },
+				{ $project: { _id: 0 } }
+			], {
 				collation: {
 					locale: 'en_US',
 					numericOrdering: true
 				}
 			})
-			.sort({ name: 1 })
 			.toArray()
 	}
-
-	getAlbumsPaginated(id, skip, limit) {
-		return this.mongoCDN
-			.collection('albums')
-			.aggregate([
-				{ $match: { $in: [id] } }
-			])
-			.skip(skip)
-			.limit(limit)
-			.toArray()
-	}
-
 
 	getAlbumCount() {
 		return this.mongoCDN
@@ -156,7 +139,7 @@ export class Database extends EventEmitter {
 			.collection('files')
 			.aggregate([
 				{ $match: { albumId } },
-				{ $unset: [ '_id' ] }
+				{ $project: { _id: 0 } }
 			])
 			.toArray()
 	}
@@ -185,17 +168,6 @@ export class Database extends EventEmitter {
 				{ $match: { albumId: { $in: [id] } } },
 				{ $project: { _id: 0, ...project } }
 			])
-			.toArray()
-	}
-
-	getAlbumFilesPaginated(id, skip, limit) {
-		return this.mongoCDN
-			.collection('files')
-			.aggregate([
-				{ $match: { albumId: { $in: [id] } } }
-			])
-			.skip(skip)
-			.limit(limit)
 			.toArray()
 	}
 
