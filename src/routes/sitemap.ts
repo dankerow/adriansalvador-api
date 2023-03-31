@@ -11,7 +11,7 @@ export default class Sitemap extends Route {
 	routes(app, options, done) {
 		app.get('/', async (req, res) => {
 			const routes = []
-			const albums = await app.database.getAlbumsSorted()
+			const albums = await app.database.getAlbums({ sort: { name: 1 } })
 
 			for (const album of albums) {
 				routes.push(`/albums/${album.id}`)
