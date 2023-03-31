@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'
 
 export default function(req, res, next) {
 	if (!req.headers.authorization) return res.status(401).send({ message: 'No authorization header provided' })
@@ -17,5 +17,5 @@ export default function(req, res, next) {
 
 		req.user = user
 		next()
-	});
+	})
 }
