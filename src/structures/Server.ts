@@ -16,7 +16,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export class Server {
 	public app: FastifyInstance
-	private routers: Array<Route>
+	private readonly routers: Array<Route>
 	public logger: logger
 	public database: Database
 
@@ -33,23 +33,24 @@ export class Server {
 		this.database = new Database()
 	}
 
-	public setup(): void {
-		this.app.register(helmet, {
+	public async setup(): Promise<void> {
+		await this.app.register(helmet, {
 			crossOriginResourcePolicy: false
 		})
 
-		this.app.register(cors, {
+		await this.app.register(cors, {
 			allowedHeaders: ['Accept', 'Origin', 'Authorization', 'Cache-Control', 'X-Requested-With', 'Content-Type', 'finishedChunks'],
 			methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH']
 		})
 
-		this.app.register(rateLimit,
+		await this.app.register(rateLimit,
 			{
-				global : false,
+				global: true,
+				ban: 3,
 				max: 100,
 				keyGenerator: (req) => req.headers.authorization || req.ip,
 				errorResponseBuilder: () => ({ status: 429, message: 'Too many requests, please you need to slow down, try again later.' })
-			});
+			})
 
 		this.app.setErrorHandler((error, req, reply) => {
 			logger.error(`Something went wrong.\nError: ${error.stack || error}`)
@@ -61,13 +62,13 @@ export class Server {
 			})
 		})
 
-		this.app.register(sentry, {
+		await this.app.register(sentry, {
 			dsn: process.env.SENTRY_DSN,
 			environment: process.env.NODE_ENV,
 			tracesSampleRate: 1.0
 		})
 
-		this.initializeDatabase()
+		await this.initializeDatabase()
 	}
 
 	/**
@@ -115,7 +116,7 @@ export class Server {
 				}
 
 				if (i + 1 === routes.length) {
-					this.registerRoutes()
+					await this.registerRoutes()
 				}
 			}
 		} else {
@@ -128,7 +129,7 @@ export class Server {
 	 * @private
 	 * @returns void
 	 */
-	private registerRoutes(): void {
+	private async registerRoutes(): Promise<void> {
 		this.routers.sort((a, b) => {
 			if (a.position > b.position) return 1
 			if (b.position > a.position) return -1
@@ -136,7 +137,28 @@ export class Server {
 		})
 
 		for (let i = 0; i < this.routers.length; i++) {
-			this.app.register(this.routers[i].routes, { prefix: this.routers[i].path })
+			const route = this.routers[i]
+
+			const middlewares = []
+			if (route.middlewares?.length) {
+				for (const middleware of route.middlewares) {
+					const importedMiddlewarePath = relative(__dirname, join('src', 'middlewares', middleware)).replaceAll('\\', '/')
+					const importedMiddleware = await import(importedMiddlewarePath)
+					middlewares.push(importedMiddleware.default)
+				}
+			}
+
+			await this.app.register((app, options, done) => {
+				app.addHook('onRoute', (routeOptions) => {
+					if (routeOptions.config && routeOptions.config.auth === false) return
+
+					routeOptions.preHandler = [...(routeOptions.preHandler || []), ...middlewares]
+
+					return
+				})
+
+				this.routers[i].routes(app, options, done)
+			}, { prefix: route.path })
 
 			if (i + 1 === this.routers.length) {
 				process.send({ type: 'log', content: `Loaded ${this.routers.length} routes.` })
@@ -147,7 +169,7 @@ export class Server {
 	}
 
 	private listen(): void {
-		this.app.listen( { port: parseInt(process.env.PORT) }, (error, address) => {
+		this.app.listen({ port: parseInt(process.env.PORT) }, (error, address) => {
 			if (error) return process.send({ type: 'error', content: error.stack || error })
 			return process.send({ type: 'log', content: `Running on ${address}` })
 		});
