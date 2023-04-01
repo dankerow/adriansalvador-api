@@ -1,9 +1,11 @@
+import 'dotenv/config'
+
 import cluster, { Worker } from 'cluster'
 import os from 'os'
 import { Logger as logger } from '../utils'
 
 const workers: Map<any, any> = new Map()
-const workersLength: number = os.cpus().length
+const workersLength: number = parseInt(process.env.WORKERS_NUMBER) || os.cpus().length
 
 logger.log('Primary', `Setting up ${workersLength} workers...`)
 
