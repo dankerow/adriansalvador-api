@@ -8,7 +8,8 @@ export default class Analytics extends Route {
 	constructor() {
 		super({
 			position: 2,
-			path: '/analytics'
+			path: '/analytics',
+			middlewares: ['auth']
 		});
 	}
 
@@ -178,10 +179,7 @@ export default class Analytics extends Route {
 			summary.popular = toArray(summary.popular)
 			summary.trending = toArray(summary.trending)
 
-			console.log(summary)
-
 			return summary
-
 		})
 
 		done()
