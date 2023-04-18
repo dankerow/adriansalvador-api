@@ -1,21 +1,21 @@
-import { FastifyInstance, FastifyServerOptions, DoneFuncWithErrOrRes } from 'fastify'
+import type { FastifyInstance, FastifyRegisterOptions, DoneFuncWithErrOrRes } from 'fastify'
 
 export interface RouteOptions {
-	position: number
-	path: string
-	middlewares?: any[]
+  position: number
+  path: string
+  middlewares?: any[]
 }
 
 export class Route {
-	position: number
-	path: string
-	middlewares: any[]
+  position: number
+  path: string
+  middlewares: any[]
 
-	constructor(options: RouteOptions) {
-		this.position = options.position;
-		this.path = options.path;
-		this.middlewares = options.middlewares || [];
-	}
+  constructor(options: RouteOptions) {
+    this.position = options.position
+    this.path = options.path
+    this.middlewares = options.middlewares || []
+  }
 
-	routes(app: FastifyInstance, options: FastifyServerOptions, done: DoneFuncWithErrOrRes) {}
+  routes(app: FastifyInstance, options: FastifyRegisterOptions<{ prefix: string }>, done: DoneFuncWithErrOrRes): void {}
 }
