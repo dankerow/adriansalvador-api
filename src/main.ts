@@ -1,4 +1,4 @@
-import cluster from 'cluster'
+import cluster from 'node:cluster'
 
 if (cluster.isPrimary) {
   import('./cluster/primary.js')
