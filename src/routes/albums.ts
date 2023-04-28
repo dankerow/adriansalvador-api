@@ -21,7 +21,7 @@ export default class Albums extends Route {
 
       const params = {
         search: req.query.search ?? null,
-        sort: req.query.sort ?? { name: 1 },
+        sort: req.query.sort ?? { lowerName: 1 },
         order: req.query.order ?? 'asc',
         limit,
         skip: (page - 1) * limit
@@ -50,7 +50,6 @@ export default class Albums extends Route {
       if (!req.params.id) return reply.code(404).send({ error: { status: 404, message: 'Album not found' } })
 
       const album = await app.database.getAlbumById(req.params.id)
-      console.log(album)
 
       if (!album) return reply.code(404).send({ error: { status: 404, message: 'Album not found' } })
 
@@ -82,19 +81,7 @@ export default class Albums extends Route {
       }
 
       for (const image of images) {
-        const host = process.env.NODE_ENV === 'production' ? process.env.CDN_BASE_URL : process.env.CDN_BASE_URL_DEV
-
         image.size = filesize(image.size)
-
-        image.thumb = {
-          sizes: {
-            square: {
-              url: `${host}/images/${image.name}`,
-              width: 64,
-              height: 64
-            }
-          }
-        }
       }
 
       return {
@@ -102,12 +89,6 @@ export default class Albums extends Route {
         count: count,
         pages: pages(count)
       }
-    })
-
-    app.post('/:id/images', async (req, reply) => {
-      console.log(req.body)
-
-      reply.code(204)
     })
 
     app.get('/favorites', {
