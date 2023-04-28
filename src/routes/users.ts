@@ -16,8 +16,8 @@ export default class Users extends Route {
   }
 
   async routes(app, options, done) {
-    const getUser = async (req, res) => {
-      if (req.params.id.length > 100) return res.status(404).send({ status: 404, message: 'The user you are looking for does not exist.' })
+    const getUser = async (req, reply) => {
+      if (req.params.id.length > 100) return reply.status(404).send({ status: 404, message: 'The user you are looking for does not exist.' })
       if (req.params.id === '@me' && req.user) {
         return req.user
       }
@@ -25,7 +25,7 @@ export default class Users extends Route {
       const user = await app.database.getUserById(req.params.id)
 
       if (!user) {
-        return res.status(404).send({ status: 404, message: 'The user you are looking for does not exist.' })
+        return reply.status(404).send({ status: 404, message: 'The user you are looking for does not exist.' })
       }
 
       return user
@@ -49,18 +49,18 @@ export default class Users extends Route {
 
     app.post('/', {
       config: { rateLimit: { max: 5, timeWindow: 1000 } }
-    }, async (req, res) => {
-      if (!('firstName' in req.body)) return res.code(400).send({ error: { status: 400, message: 'Missing "lastName" field from request body.' } })
-      if (!('lastName' in req.body)) return res.code(400).send({ error: { status: 400, message: 'Missing "lastName" field from request body.' } })
-      if (!('email' in req.body)) return res.code(400).send({ error: { status: 400, message: 'Missing "email" field from request body.' } })
-      // if (!('role' in req.body)) return res.code(400).send({ error: { status: 400, message: 'Missing "role" field from request body.' } })
+    }, async (req, reply) => {
+      if (!('firstName' in req.body)) return reply.code(400).send({ error: { status: 400, message: 'Missing "lastName" field from request body.' } })
+      if (!('lastName' in req.body)) return reply.code(400).send({ error: { status: 400, message: 'Missing "lastName" field from request body.' } })
+      if (!('email' in req.body)) return reply.code(400).send({ error: { status: 400, message: 'Missing "email" field from request body.' } })
+      // if (!('role' in req.body)) return reply.code(400).send({ error: { status: 400, message: 'Missing "role" field from request body.' } })
 
-      if (typeof req.body.firstName !== 'string') return res.code(400).send({ error: { status: 400, message: 'An invalid firstName was provided. The firstName must be a string.' } })
-      if (typeof req.body.lastName !== 'string') return res.code(400).send({ error: { status: 400, message: 'An invalid lastName was provided. The lastName must be a string.' } })
-      if (typeof req.body.email !== 'string') return res.code(400).send({ error: { status: 400, message: 'An invalid email was provided. The email must be a string.' } })
+      if (typeof req.body.firstName !== 'string') return reply.code(400).send({ error: { status: 400, message: 'An invalid firstName was provided. The firstName must be a string.' } })
+      if (typeof req.body.lastName !== 'string') return reply.code(400).send({ error: { status: 400, message: 'An invalid lastName was provided. The lastName must be a string.' } })
+      if (typeof req.body.email !== 'string') return reply.code(400).send({ error: { status: 400, message: 'An invalid email was provided. The email must be a string.' } })
 
       const user = await app.database.getUserByEmail(req.body.email)
-      if (user) return res.code(409).send({ error: { status: 409, message: 'User already created.' } })
+      if (user) return reply.code(409).send({ error: { status: 409, message: 'User already created.' } })
 
       const userId = crypto.randomUUID()
 
@@ -92,22 +92,22 @@ export default class Users extends Route {
 
     app.get('/@me', {
       config: { rateLimit: { max: 5, timeWindow: 1000 } }
-    }, async (req, res) => {
-      return await getUser(req, res)
+    }, async (req, reply) => {
+      return await getUser(req, reply)
     })
 
-    app.post('/:id/password/update', async (req, res) => {
+    app.post('/:id/password/update', async (req, reply) => {
       const { password, newPassword } = req.body
-      if (!password || !newPassword) return res.status(400).send({ message: 'Invalid body provided' })
-      if (password === newPassword) return res.status(400).send({ message: 'Passwords have to be different' })
+      if (!password || !newPassword) return reply.status(400).send({ message: 'Invalid body provided' })
+      if (password === newPassword) return reply.status(400).send({ message: 'Passwords have to be different' })
 
       const user = await app.database.getUserWithFields(req.user.id, ['password'])
 
       const comparePassword = await bcrypt.compare(password, user?.password ?? '')
-      if (!comparePassword) return res.status(401).send({ message: 'Current password is incorrect' })
+      if (!comparePassword) return reply.status(401).send({ message: 'Current password is incorrect' })
 
       if (newPassword.length < 6 || newPassword.length > 64) {
-        return res.status(400).send({ message: 'Password must have 6-64 characters' })
+        return reply.status(400).send({ message: 'Password must have 6-64 characters' })
       }
 
       let hash
@@ -115,7 +115,7 @@ export default class Users extends Route {
         hash = await bcrypt.hash(newPassword, 10)
       } catch (err) {
         req.log.error(err)
-        return res.status(401).send({ message: 'There was a problem processing your account' })
+        return reply.status(401).send({ message: 'There was a problem processing your account' })
       }
 
       const passwordEditedAt = dayjs().utc().toDate()
