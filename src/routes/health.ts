@@ -9,8 +9,8 @@ export default class Health extends Route {
   }
 
   routes(app, options, done) {
-    app.get('/', async (req, res) => {
-      res.headers('Cache-Control', [
+    app.get('/', async (req, reply) => {
+      reply.headers('Cache-Control', [
         'private',
         'max-age=0',
         'no-cache',
@@ -18,7 +18,7 @@ export default class Health extends Route {
         'must-revalidate'
       ].join(', '))
 
-      res.headers('Expires', new Date(Date.now() - 1000).toUTCString())
+      reply.headers('Expires', new Date(Date.now() - 1000).toUTCString())
 
       return {
         status: 'OK',
