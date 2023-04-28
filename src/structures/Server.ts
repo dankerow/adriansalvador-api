@@ -85,6 +85,11 @@ export class Server {
     await this.database.connect()
     this.app.decorate('database', this.database)
 
+    this.app.addHook('onClose', async (instance, done) => {
+      await this.database.close()
+      done()
+    })
+
     process.send({ type: 'log', content: 'Successfully connected to database.' })
 
     await this.loadRoutes(join('src', 'routes'))
