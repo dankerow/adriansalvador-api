@@ -22,22 +22,22 @@
     "exifreader": "^4.12.0",
     "filesize": "^10.0.7",
     "jsonwebtoken": "^9.0.0",
-    "mongodb": "^5.3.0"
+    "mongodb": "^5.4.0"
   },
   "devDependencies": {
     "@fastify/cors": "^8.2.1",
     "@fastify/helmet": "^10.1.0",
     "@fastify/rate-limit": "^8.0.0",
     "@immobiliarelabs/fastify-sentry": "^6.0.1",
-    "@types/node": "^18.16.2",
-    "@typescript-eslint/eslint-plugin": "^5.59.1",
-    "@typescript-eslint/parser": "^5.59.1",
+    "@types/node": "^18.16.5",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
     "dotenv": "^16.0.3",
-    "eslint": "^8.39.0",
+    "eslint": "^8.40.0",
     "eslint-plugin-import": "^2.27.5",
     "fastify": "4.17.0",
     "nodemon": "^2.0.22",
-    "tsx": "^3.12.6",
+    "tsx": "^3.12.7",
     "typescript": "^5.0.4"
   },
   "nodemonConfig": {
@@ -47,5 +47,5 @@
     ],
     "delay": 2500
   },
-  "packageManager": "pnpm@8.3.1"
+  "packageManager": "pnpm@8.4.0"
 }
