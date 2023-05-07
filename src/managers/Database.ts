@@ -28,6 +28,10 @@ export class Database extends EventEmitter {
       })
   }
 
+  async close(force = false) {
+    await this.client.close(force)
+  }
+
   getUserById(id) {
     return this.mongoUsers
       .collection('metadata')
@@ -87,7 +91,11 @@ export class Database extends EventEmitter {
       .aggregate([
         { $match: { id } },
         { $lookup: { from: 'files', localField: 'coverId', foreignField: 'id', as: 'cover' } },
-        { $unset: [ '_id', 'cover.id', 'cover.type', 'cover.size' ] }
+        { $lookup: { from: 'files', localField: 'coverFallbackId', foreignField: 'id', as: 'coverFallback' } },
+        { $addFields: { cover: { $arrayElemAt: ['$cover', 0] } } },
+        { $addFields: { coverFallback: { $arrayElemAt: ['$coverFallback', 0] } } },
+        { $unset: [ 'cover._id', 'cover.albumId', 'coverFallback._id', 'coverFallback.albumId' ] },
+        { $project: { _id: 0 } }
       ])
       .limit(1)
       .next()
@@ -98,7 +106,7 @@ export class Database extends EventEmitter {
     if (params.favorite) aggregation.push({ $match: { favorite: true } })
     if (params.featured) aggregation.push({ $match: { featured: true } })
     if (params.search) aggregation.push({ $match: { name: { $regex: params.search, $options: 'i' } } })
-    if (params.sort) aggregation.push({ $addFields: { name: { $toLower: '$name' } } }, { $sort: params.sort })
+    if (params.sort) aggregation.push({ $addFields: { lowerName: { $toLower: '$name' } } }, { $sort: params.sort })
     if (params.skip) aggregation.push({ $skip: params.skip })
     if (params.limit) aggregation.push({ $limit: params.limit })
 
@@ -107,8 +115,10 @@ export class Database extends EventEmitter {
       .aggregate([
         ...aggregation,
         { $lookup: { from: 'files', localField: 'coverId', foreignField: 'id', as: 'cover' } },
+        { $lookup: { from: 'files', localField: 'coverFallbackId', foreignField: 'id', as: 'coverFallback' } },
         { $addFields: { cover: { $arrayElemAt: ['$cover', 0] } } },
-        { $unset: [ 'cover._id', 'cover.id', 'cover.type', 'cover.size', 'cover.albumId' ] },
+        { $addFields: { coverFallback: { $arrayElemAt: ['$coverFallback', 0] } } },
+        { $unset: [ 'cover._id', 'cover.albumId', 'coverFallback._id', 'coverFallback.albumId' ] },
         { $project: { _id: 0, lowerName: 0 } }
       ], {
         collation: {
@@ -129,7 +139,10 @@ export class Database extends EventEmitter {
     return this.mongoCDN
       .collection('files')
       .aggregate([
-        { $sample: { size: limit } }
+        { $sample: { size: limit } },
+        { $lookup: { from: 'albums', localField: 'albumId', foreignField: 'id', as: 'album' } },
+        { $addFields: { album: { $arrayElemAt: ['$album', 0] } } },
+        { $project: { _id: 0 } }
       ])
       .toArray()
   }
@@ -200,8 +213,10 @@ export class Database extends EventEmitter {
         { $addFields: { lowerName: { $toLower: '$name' } } },
         { $match: { lowerName: name } },
         { $lookup: { from: 'files', localField: 'coverId', foreignField: 'id', as: 'cover' } },
+        { $lookup: { from: 'files', localField: 'coverFallbackId', foreignField: 'id', as: 'coverFallback' } },
         { $addFields: { cover: { $arrayElemAt: ['$cover', 0] } } },
-        { $unset: [ 'cover._id', 'cover.id', 'cover.type', 'cover.size', 'cover.albumId' ] },
+        { $addFields: { coverFallback: { $arrayElemAt: ['$coverFallback', 0] } } },
+        { $unset: [ 'cover._id', 'cover.albumId', 'coverFallback._id', 'coverFallback.albumId' ] },
         { $project: { _id: 0, lowerName: 0 } }
       ])
       .limit(1)
