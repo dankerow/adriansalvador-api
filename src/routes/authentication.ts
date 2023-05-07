@@ -6,7 +6,8 @@ export default class Authentication extends Route {
   constructor() {
     super({
       position: 2,
-      path: '/authentication'
+      path: '/authentication',
+      middlewares: ['auth']
     })
   }
 
@@ -18,7 +19,21 @@ export default class Authentication extends Route {
       }, process.env.AUTH_SECRET, { expiresIn: '3h' })
     }
 
-    app.post('/login', async (req, res) => {
+    app.post('/login', {
+      config: {
+        auth: false
+      },
+      schema: {
+        body: {
+          type: 'object',
+          properties: {
+            email: { type: 'string' },
+            password: { type: 'string' }
+          },
+          required: ['email', 'password']
+        }
+      }
+    }, async (req, res) => {
       const email = req.body.email
       const password = req.body.password
 
@@ -30,24 +45,20 @@ export default class Authentication extends Route {
       const userCredentials = await app.database.getUserCredentials(user.id)
 
       const passwordVerification = await bcrypt.compare(password, userCredentials.password)
-      if (passwordVerification) {
-        const token = createToken({ id: user.id })
-
-        /* await app.database.updateUser(user.id, {
-          sessionToken: token
-        }) */
-
-        return { token, user }
-      } else {
+      if (!passwordVerification) {
         return res.code(403).send({ error: { statusCode: 403, message: 'Invalid credentials.' } })
       }
+
+      const token = createToken({ id: user.id })
+
+      /* await app.database.updateUser(user.id, {
+        sessionToken: token
+      }) */
+
+      return { token, user }
     })
 
-    const authMiddleware = await import('../middlewares/auth.js')
-
-    app.get('/verify', {
-      preHandler: [authMiddleware.default]
-    }, (req) => {
+    app.get('/verify', (req) => {
       return req.user
     })
 
