@@ -25,8 +25,8 @@ dependencies:
 
 devDependencies:
   '@fastify/cors':
-    specifier: ^8.2.1
-    version: 8.2.1
+    specifier: ^8.3.0
+    version: 8.3.0
   '@fastify/helmet':
     specifier: ^10.1.1
     version: 10.1.1
@@ -37,8 +37,8 @@ devDependencies:
     specifier: ^6.0.1
     version: 6.0.1
   '@types/node':
-    specifier: ^18.16.14
-    version: 18.16.14
+    specifier: ^18.16.16
+    version: 18.16.16
   '@typescript-eslint/eslint-plugin':
     specifier: ^5.59.7
     version: 5.59.7(@typescript-eslint/parser@5.59.7)(eslint@8.41.0)(typescript@5.0.4)
@@ -180,8 +180,8 @@ packages:
       fast-uri: 2.1.0
     dev: true
 
-  /@fastify/cors@8.2.1:
-    resolution: {integrity: sha512-2H2MrDD3ea7g707g1CNNLWb9/tYbmw7HS+MK2SDcgjxwzbOFR93JortelTIO8DBFsZqFtEpKNxiZfSyrGgYcbw==}
+  /@fastify/cors@8.3.0:
+    resolution: {integrity: sha512-oj9xkka2Tg0MrwuKhsSUumcAkfp2YCnKxmFEusi01pjk1YrdDsuSYTHXEelWNW+ilSy/ApZq0c2SvhKrLX0H1g==}
     dependencies:
       fastify-plugin: 4.3.0
       mnemonist: 0.39.5
@@ -231,7 +231,7 @@ packages:
     engines: {node: ^8.13.0 || >=10.10.0}
     dependencies:
       '@grpc/proto-loader': 0.7.5
-      '@types/node': 18.16.14
+      '@types/node': 18.16.16
     dev: false
 
   /@grpc/proto-loader@0.7.5:
@@ -427,7 +427,7 @@ packages:
     resolution: {integrity: sha512-IO+MJPVhoqz+28h1qLAcBEH2+xHMK6MTyHJc7MTnnYb6wsoLR29POVGJ7LycmVXIqyy/4/2ShP5sUwTXuOwb/w==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 18.16.14
+      '@types/node': 18.16.16
     dev: false
 
   /@types/json-schema@7.0.11:
@@ -461,14 +461,14 @@ packages:
     resolution: {integrity: sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==}
     dev: false
 
-  /@types/node@18.16.14:
-    resolution: {integrity: sha512-+ImzUB3mw2c5ISJUq0punjDilUQ5GnUim0ZRvchHIWJmOC0G+p0kzhXBqj6cDjK0QdPFwzrHWgrJp3RPvCG5qg==}
+  /@types/node@18.16.16:
+    resolution: {integrity: sha512-NpaM49IGQQAUlBhHMF82QH80J08os4ZmyF9MkpCzWAGuOHqE4gTEbhzd7L3l5LmWuZ6E0OiC1FweQ4tsiW35+g==}
 
   /@types/rimraf@3.0.2:
     resolution: {integrity: sha512-F3OznnSLAUxFrCEu/L5PY8+ny8DtcFRjx7fZZ9bycvXRi3KPTRS9HOitGZwvPg0juRhXFWIeKX58cnX5YqLohQ==}
     dependencies:
       '@types/glob': 8.1.0
-      '@types/node': 18.16.14
+      '@types/node': 18.16.16
     dev: false
 
   /@types/semver@7.3.13:
@@ -482,7 +482,7 @@ packages:
   /@types/whatwg-url@8.2.2:
     resolution: {integrity: sha512-FtQu10RWgn3D9U4aazdwIE2yzphmTJREDqNdODHrbrZmmMqI0vMheC/6NE/J1Yveaj8H+ela+YwWTjq5PGmuhA==}
     dependencies:
-      '@types/node': 18.16.14
+      '@types/node': 18.16.16
       '@types/webidl-conversions': 7.0.0
     dev: false
 
@@ -2804,7 +2804,7 @@ packages:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 18.16.14
+      '@types/node': 18.16.16
       long: 5.2.1
     dev: false
 
