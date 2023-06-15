@@ -28,7 +28,7 @@
     "@fastify/cors": "^8.3.0",
     "@fastify/helmet": "^10.1.1",
     "@fastify/rate-limit": "^8.0.1",
-    "@immobiliarelabs/fastify-sentry": "^6.0.4",
+    "@immobiliarelabs/fastify-sentry": "^6.0.5",
     "@types/node": "^18.16.18",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
