@@ -44,7 +44,7 @@ export default class Images extends Route {
         rateLimit: { max: 15, timeWindow: 15 * 1000 }
       }
     }, async () => {
-      return await app.database.getRandomImages(35)
+      return await app.database.getRandomAlbumsImages(35)
     })
 
     done()
