@@ -83,6 +83,18 @@ export default class Albums extends Route {
       return req.album
     })
 
+    app.post('/:id/publish', {
+      preHandler: [getAlbum]
+    }, async (req) => {
+      return await app.database.updateAlbum(req.album.id, { draft: false, postedAt: +new Date() })
+    })
+
+    app.post('/:id/unpublish', {
+      preHandler: [getAlbum]
+    }, async (req) => {
+      return await app.database.updateAlbum(req.album.id, { draft: true, postedAt: null })
+    })
+
     app.get('/:id/images', {
       config: {
         auth: false
