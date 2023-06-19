@@ -59,10 +59,10 @@ export class Server {
     this.app.setErrorHandler((error, req, reply) => {
       logger.error(`Something went wrong.\nError: ${error.stack || error}`)
 
-      reply.code(500).send({
+      reply.code(error.statusCode).send({
         success: false,
-        status: 500,
-        message: 'Oops! Something went wrong. Try again later.'
+        status: error.statusCode,
+        message: error.message ?? 'Oops! Something went wrong. Try again later.'
       })
     })
 
