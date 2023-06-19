@@ -28,7 +28,7 @@ export default class Users extends Route {
         return reply.status(404).send({ status: 404, message: 'The user you are looking for does not exist.' })
       }
 
-      return user
+      return req.user = user
     }
 
     app.get('/', async (req) => {
@@ -91,12 +91,17 @@ export default class Users extends Route {
     })
 
     app.get('/@me', {
-      config: { rateLimit: { max: 5, timeWindow: 1000 } }
-    }, async (req, reply) => {
-      return await getUser(req, reply)
+      config: {
+        rateLimit: { max: 5, timeWindow: 1000 }
+      },
+      preHandler: [getUser]
+    }, async (req) => {
+      return req.user
     })
 
-    app.post('/:id/password/update', async (req, reply) => {
+    app.post('/:id/password/update', {
+      preHandler: [getUser]
+    }, async (req, reply) => {
       const { password, newPassword } = req.body
       if (!password || !newPassword) return reply.status(400).send({ message: 'Invalid body provided' })
       if (password === newPassword) return reply.status(400).send({ message: 'Passwords have to be different' })
