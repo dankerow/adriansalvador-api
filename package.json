@@ -30,8 +30,8 @@
     "@fastify/rate-limit": "^8.0.1",
     "@immobiliarelabs/fastify-sentry": "^6.0.5",
     "@types/node": "^18.16.18",
-    "@typescript-eslint/eslint-plugin": "^5.59.11",
-    "@typescript-eslint/parser": "^5.59.11",
+    "@typescript-eslint/eslint-plugin": "^5.60.0",
+    "@typescript-eslint/parser": "^5.60.0",
     "dotenv": "^16.3.1",
     "eslint": "^8.43.0",
     "eslint-plugin-import": "^2.27.5",
@@ -47,5 +47,5 @@
     ],
     "delay": 2500
   },
-  "packageManager": "pnpm@8.6.2"
+  "packageManager": "pnpm@8.6.3"
 }
