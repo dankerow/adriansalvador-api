@@ -29,6 +29,7 @@
     "@fastify/helmet": "^10.1.1",
     "@fastify/rate-limit": "^8.0.1",
     "@immobiliarelabs/fastify-sentry": "^6.0.6",
+    "@types/jsonwebtoken": "^9.0.2",
     "@types/node": "^18.16.18",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
