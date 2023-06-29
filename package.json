@@ -39,7 +39,7 @@
     "fastify": "4.18.0",
     "nodemon": "^2.0.22",
     "tsx": "^3.12.7",
-    "typescript": "^5.1.5"
+    "typescript": "^5.1.6"
   },
   "nodemonConfig": {
     "ext": "ts",
