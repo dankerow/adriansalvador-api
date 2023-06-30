@@ -40,6 +40,9 @@ devDependencies:
   '@immobiliarelabs/fastify-sentry':
     specifier: ^6.0.7
     version: 6.0.7
+  '@types/bcrypt':
+    specifier: ^5.0.0
+    version: 5.0.0
   '@types/jsonwebtoken':
     specifier: ^9.0.2
     version: 9.0.2
@@ -428,6 +431,12 @@ packages:
     dependencies:
       '@sentry/types': 7.57.0
       tslib: 1.14.1
+    dev: true
+
+  /@types/bcrypt@5.0.0:
+    resolution: {integrity: sha512-agtcFKaruL8TmcvqbndlqHPSJgsolhf/qPWchFlgnW1gECTN/nKbFcoFnvKAQRFfKbh+BO6A3SWdJu9t+xF3Lw==}
+    dependencies:
+      '@types/node': 18.16.18
     dev: true
 
   /@types/glob@8.1.0:
