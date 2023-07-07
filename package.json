@@ -19,7 +19,6 @@
     "@google-analytics/data": "^3.2.2",
     "bcrypt": "^5.1.0",
     "dayjs": "^1.11.9",
-    "exifreader": "^4.13.0",
     "filesize": "^10.0.7",
     "jsonwebtoken": "^9.0.1",
     "mongodb": "^5.7.0"

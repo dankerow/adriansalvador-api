@@ -14,9 +14,6 @@ dependencies:
   dayjs:
     specifier: ^1.11.9
     version: 1.11.9
-  exifreader:
-    specifier: ^4.13.0
-    version: 4.13.0
   filesize:
     specifier: ^10.0.7
     version: 10.0.7
@@ -642,13 +639,6 @@ packages:
       '@typescript-eslint/types': 5.61.0
       eslint-visitor-keys: 3.4.1
     dev: true
-
-  /@xmldom/xmldom@0.8.8:
-    resolution: {integrity: sha512-0LNz4EY8B/8xXY86wMrQ4tz6zEHZv9ehFMJPm8u2gq5lQ71cfRKdaKyxfJAx5aUoyzx0qzgURblTisPGgz3d+Q==}
-    engines: {node: '>=10.0.0'}
-    requiresBuild: true
-    dev: false
-    optional: true
 
   /abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
@@ -1573,13 +1563,6 @@ packages:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
     dev: true
-
-  /exifreader@4.13.0:
-    resolution: {integrity: sha512-IhJBpyXDLbCdgzVHkthadOvrMiZOR2XS7POVp0b5JoVfScRoCJ6YazZ+stTkbDTE5TRTP44bE5RKsujckAs45Q==}
-    requiresBuild: true
-    optionalDependencies:
-      '@xmldom/xmldom': 0.8.8
-    dev: false
 
   /extend@3.0.2:
     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
