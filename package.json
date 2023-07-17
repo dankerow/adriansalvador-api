@@ -36,7 +36,7 @@
     "dotenv": "^16.3.1",
     "eslint": "^8.45.0",
     "eslint-plugin-import": "^2.27.5",
-    "fastify": "4.19.2",
+    "fastify": "4.20.0",
     "nodemon": "^3.0.1",
     "tsx": "^3.12.7",
     "typescript": "^5.1.6"
@@ -48,5 +48,5 @@
     ],
     "delay": 2500
   },
-  "packageManager": "pnpm@8.6.7"
+  "packageManager": "pnpm@8.6.8"
 }
