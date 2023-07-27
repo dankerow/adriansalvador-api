@@ -19,7 +19,7 @@
     "@google-analytics/data": "^3.3.0",
     "bcrypt": "^5.1.0",
     "dayjs": "^1.11.9",
-    "filesize": "^10.0.7",
+    "filesize": "^10.0.8",
     "jsonwebtoken": "^9.0.1",
     "mongodb": "^5.7.0"
   },
@@ -36,7 +36,7 @@
     "dotenv": "^16.3.1",
     "eslint": "^8.45.0",
     "eslint-plugin-import": "^2.27.5",
-    "fastify": "4.20.0",
+    "fastify": "4.21.0",
     "nodemon": "^3.0.1",
     "tsx": "^3.12.7",
     "typescript": "^5.1.6"

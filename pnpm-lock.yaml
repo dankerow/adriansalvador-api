@@ -15,8 +15,8 @@ dependencies:
     specifier: ^1.11.9
     version: 1.11.9
   filesize:
-    specifier: ^10.0.7
-    version: 10.0.7
+    specifier: ^10.0.8
+    version: 10.0.8
   jsonwebtoken:
     specifier: ^9.0.1
     version: 9.0.1
@@ -62,8 +62,8 @@ devDependencies:
     specifier: ^2.27.5
     version: 2.27.5(@typescript-eslint/parser@6.2.0)(eslint@8.45.0)
   fastify:
-    specifier: 4.20.0
-    version: 4.20.0
+    specifier: 4.21.0
+    version: 4.21.0
   nodemon:
     specifier: ^3.0.1
     version: 3.0.1
@@ -1640,8 +1640,8 @@ packages:
     resolution: {integrity: sha512-M3+i368lV0OYTJ5TfClIoPKEKSOF7112iiPdwgfSR0gN98BjA1Nk+c6oBHtfcVt9KiMxl+EQKHC1QNWo3ZOpYQ==}
     dev: true
 
-  /fastify@4.20.0:
-    resolution: {integrity: sha512-zWWi5KGAb1YZ6fyrnFnA1CA1EZHkGM6YuELgB3QpS3l4lLRy14W1cc16b4KGPH/zQ98WCSdS+T41JkHY3eq1oA==}
+  /fastify@4.21.0:
+    resolution: {integrity: sha512-tsu4bcwE4HetxqW8prA5fbC9bKHMYDp7jGEDWyzK1l90a3uOaLoIcQbdGcWeODNLVJviQnzh1wvIjTZE3MJFEg==}
     dependencies:
       '@fastify/ajv-compiler': 3.5.0
       '@fastify/error': 3.2.1
@@ -1676,8 +1676,8 @@ packages:
       flat-cache: 3.0.4
     dev: true
 
-  /filesize@10.0.7:
-    resolution: {integrity: sha512-iMRG7Qo9nayLoU3PNCiLizYtsy4W1ClrapeCwEgtiQelOAOuRJiw4QaLI+sSr8xr901dgHv+EYP2bCusGZgoiA==}
+  /filesize@10.0.8:
+    resolution: {integrity: sha512-/ylBrxZ1GAjgh2CEemKKLwTtmXfWqTtN1jRl6iqLwnMEucUX5cmaCCUPGstQOHVCcK9uYL6o1cPNakLQU2sasQ==}
     engines: {node: '>= 10.4.0'}
     dev: false
 
