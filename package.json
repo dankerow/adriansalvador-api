@@ -48,5 +48,5 @@
     ],
     "delay": 2500
   },
-  "packageManager": "pnpm@8.6.10"
+  "packageManager": "pnpm@8.6.11"
 }
