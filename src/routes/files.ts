@@ -11,6 +11,29 @@ export default class Files extends Route {
   }
 
   routes(app, _options, done) {
+    app.get('/', async (req) => {
+      const page = req.query.page ? parseInt(req.query.page) : 1
+      const limit = req.query.limit ? parseInt(req.query.limit) : 25
+
+      const params = {
+        search: req.query.search ?? null,
+        sort: req.query.sort ?? 'lowerName',
+        order: req.query.order ?? 'asc',
+        limit,
+        skip: (page - 1) * limit
+      }
+
+      const files = await app.database.getFiles(params)
+      const count = await app.database.getFileCount()
+      const pages = (fileCount: number) => Math.ceil(fileCount / limit)
+
+      return {
+        data: files,
+        count,
+        pages: pages(count)
+      }
+    })
+
     app.get('/:id', {
       schema: {
         params: {
