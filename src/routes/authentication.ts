@@ -13,7 +13,7 @@ export default class Authentication extends Route {
     })
   }
 
-  async routes(app, opts, done) {
+  async routes(app, _options, done) {
     const createToken = (user: User) => {
       return jwt.sign(user, process.env.AUTH_SECRET, {
         expiresIn: '3h',
