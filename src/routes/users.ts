@@ -31,7 +31,17 @@ export default class Users extends Route {
       return req.user = user
     }
 
-    app.get('/', async (req) => {
+    app.get('/', {
+      schema: {
+        querystring: {
+          type: 'object',
+          properties: {
+            page: { type: 'number' },
+            limit: { type: 'number' }
+          }
+        }
+      }
+    }, async (req) => {
       let users = await app.database.getUsersSorted()
       const page = req.query.page ? parseInt(req.query.page) : 1
       const limit = req.query.limit ? parseInt(req.query.limit) : 25
@@ -48,17 +58,23 @@ export default class Users extends Route {
     })
 
     app.post('/', {
-      config: { rateLimit: { max: 5, timeWindow: 1000 } }
+      config: {
+        rateLimit: {
+          max: 5, timeWindow: 1000
+        }
+      },
+      schema: {
+        body: {
+          type: 'object',
+          properties: {
+            firstName: { type: 'string' },
+            lastName: { type: 'string' },
+            email: { type: 'string' },
+            role: { type: 'string' }
+          }
+        }
+      }
     }, async (req, reply) => {
-      if (!('firstName' in req.body)) return reply.code(400).send({ error: { status: 400, message: 'Missing "lastName" field from request body.' } })
-      if (!('lastName' in req.body)) return reply.code(400).send({ error: { status: 400, message: 'Missing "lastName" field from request body.' } })
-      if (!('email' in req.body)) return reply.code(400).send({ error: { status: 400, message: 'Missing "email" field from request body.' } })
-      // if (!('role' in req.body)) return reply.code(400).send({ error: { status: 400, message: 'Missing "role" field from request body.' } })
-
-      if (typeof req.body.firstName !== 'string') return reply.code(400).send({ error: { status: 400, message: 'An invalid firstName was provided. The firstName must be a string.' } })
-      if (typeof req.body.lastName !== 'string') return reply.code(400).send({ error: { status: 400, message: 'An invalid lastName was provided. The lastName must be a string.' } })
-      if (typeof req.body.email !== 'string') return reply.code(400).send({ error: { status: 400, message: 'An invalid email was provided. The email must be a string.' } })
-
       const user = await app.database.getUserByEmail(req.body.email)
       if (user) return reply.code(409).send({ error: { status: 409, message: 'User already created.' } })
 
