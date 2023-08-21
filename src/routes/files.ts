@@ -1,16 +1,16 @@
 import { Route } from '../structures'
 import { filesize } from 'filesize'
 
-export default class Images extends Route {
+export default class Files extends Route {
   constructor() {
     super({
       position: 2,
-      path: '/images',
+      path: '/files',
       middlewares: ['auth']
     })
   }
 
-  routes(app, options, done) {
+  routes(app, _options, done) {
     app.get('/:id', {
       schema: {
         params: {
