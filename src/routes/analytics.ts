@@ -4,6 +4,35 @@ import { BetaAnalyticsDataClient } from '@google-analytics/data'
 
 import key from '../keys/adrian-salvador-website-9e67e3e8a223.json' assert { type: 'json' }
 
+interface Dimensions {
+  name: string
+}
+
+interface Metrics {
+  name: string
+}
+
+interface OrderBys {
+  metric: { metricName: string }
+  desc: boolean
+}
+
+interface ReportStructure {
+  property: string
+  dateRanges: Array<{ startDate: string; endDate: string }>
+  dimensions: Array<Dimensions>
+  metrics: Array<Metrics>
+  orderBys?: Array<OrderBys>
+}
+
+interface Summary {
+  basic?: object
+  popular?: Array<object>
+  trending?: Array<object>
+  fileCount?: number
+}
+
+
 export default class Analytics extends Route {
   constructor() {
     super({
@@ -13,7 +42,94 @@ export default class Analytics extends Route {
     })
   }
 
-  routes(app, options, done) {
+  routes(app, _options, done) {
+    const reportStructure = (startDate: string, dimensions: Array<{ name: string }>, metrics: Array<{ name: string }>, orderBys?: Array<{ metric: { metricName: string }; desc: boolean }>): ReportStructure => ({
+      property: 'properties/325424669',
+      dateRanges: [
+        {
+          startDate,
+          endDate: 'today'
+        }
+      ],
+      dimensions,
+      metrics,
+      orderBys
+    })
+
+    const fillDimensionsandPagePath = (item: any, removals: string[], reportQuery: ReportStructure, row: any, pagePath: string) => {
+      row.dimensionValues.forEach((dimension, idx) => {
+        let dimensionValue = dimension.value
+
+        // If we have any strings to remove from the dimension value
+        removals.forEach((toReplace: string) => {
+          dimensionValue = dimensionValue.replace(toReplace, '')
+        })
+
+        const dimensionKey = reportQuery.dimensions[idx].name
+        if (dimensionKey === 'pagePath') {
+          if (dimensionValue !== '/') {
+            dimensionValue = dimensionValue.replace(/\/$/, '')
+          }
+          pagePath = dimensionValue
+        } else {
+          item[dimensionKey] = dimensionValue
+        }
+      })
+    }
+
+    const fillMetrics = (item: any, reportQuery: ReportStructure, row: any) => {
+      row.metricValues.forEach((metric, idx) => {
+        const metricKey = reportQuery.metrics[idx].name
+        item[metricKey] = metric.value
+      })
+    }
+
+    const getResults = (reportQuery: ReportStructure, response: any, alias: string) => {
+      const results = {}
+      const removals = []
+
+      if (response && response.rows) {
+        response.rows.forEach(row => {
+          if (row && row.dimensionValues && row.dimensionValues.length > 0 && row.metricValues) {
+            const item = {}
+            let pagePath
+
+            fillDimensionsandPagePath(item, removals, reportQuery, row, pagePath)
+            fillMetrics(item, reportQuery, row)
+
+            results[pagePath] = item
+          }
+
+          if (alias === 'basic') {
+            results.pageViews = row.metricValues[0]?.value || null
+            results.totalVisitors = row.metricValues[1]?.value || null
+            results.newVisitors = row.metricValues[2]?.value || null
+            results.engagementRate = row.metricValues[3]?.value || null
+          }
+        })
+      }
+
+      return results
+    }
+
+    const getReportData = async (analyticsData: BetaAnalyticsDataClient, reports: {
+      trending: () => ReportStructure
+      basic: () => ReportStructure
+      popular: () => ReportStructure
+    }) => {
+      const summary: Summary = {}
+
+      for (const [alias, report] of Object.entries(reports)) {
+        const reportQuery = report()
+        const response = await analyticsData.runReport(reportQuery)
+          .then((value) => value[0])
+          .catch(err => console.error(err))
+        summary[alias] = getResults(reportQuery, response, alias)
+      }
+
+      return summary
+    }
+
     app.get('/', async () => {
       const analyticsData = new BetaAnalyticsDataClient({
         credentials: {
@@ -23,167 +139,28 @@ export default class Analytics extends Route {
       })
 
       const reports = {
-        basic: () => {
-          return {
-            property: 'properties/325424669',
-            dateRanges: [
-              {
-                startDate: '7daysAgo',
-                endDate: 'today'
-              }
-            ],
-            metrics: [
-              {
-                name: 'screenPageViews'
-              },
-              {
-                name: 'totalUsers'
-              },
-              {
-                name: 'newUsers'
-              },
-              {
-                name: 'engagementRate'
-              }
-            ]
-          }
-        },
-        popular: () => {
-          return {
-            property: 'properties/325424669',
-            dateRanges: [
-              {
-                startDate: '30daysAgo',
-                endDate: 'today'
-              }
-            ],
-            dimensions: [
-              {
-                name: 'pagePath'
-              },
-              {
-                name: 'pageTitle'
-              }
-            ],
-            metrics: [
-              {
-                name: 'screenPageViews'
-              }
-            ],
-            orderBys: [
-              {
-                metric: {
-                  metricName: 'screenPageViews'
-                },
-                desc: true
-              }
-            ]
-          }
-        },
-        trending: () => {
-          return {
-            property: 'properties/325424669',
-            dateRanges: [
-              {
-                startDate: '1daysAgo',
-                endDate: 'today'
-              }
-            ],
-            dimensions: [
-              {
-                name: 'pagePath'
-              },
-              {
-                name: 'pageTitle'
-              }
-            ],
-            metrics: [
-              {
-                name: 'screenPageViews'
-              }
-            ],
-            orderBys: [
-              {
-                metric: {
-                  metricName: 'screenPageViews'
-                },
-                desc: true
-              }
-            ]
-          }
-        }
+        basic: () => reportStructure('7daysAgo', [],
+          [{ name: 'screenPageViews' }, { name: 'totalUsers' }, { name: 'newUsers' }, { name: 'engagementRate' }]
+        ),
+        popular: () => reportStructure('30daysAgo',
+          [{ name: 'pagePath' }, { name: 'pageTitle' }],
+          [{ name: 'screenPageViews' }],
+          [{ metric: { metricName: 'screenPageViews' }, desc: true }]
+        ),
+        trending: () => reportStructure('1daysAgo',
+          [{ name: 'pagePath' }, { name: 'pageTitle' }],
+          [{ name: 'screenPageViews' }],
+          [{ metric: { metricName: 'screenPageViews' }, desc: true }]
+        )
       }
 
-      const summary: {
-        popular?: object[]
-        trending?: object[]
-        imageCount?: number
-      } = {}
-
-      for (const [alias, report] of Object.entries(reports)) {
-        const reportQuery = report()
-        const response = await analyticsData.runReport(reportQuery)
-          .then((value) => {
-            return value[0]
-          })
-          .catch((err) => {
-            console.error(err)
-          })
-
-        let results = {}
-
-        if (response && response.rows) {
-          for (const row of response.rows) {
-            let pagePath = ''
-            const removals = []
-
-            if (row && row.dimensionValues && row.dimensionValues.length > 0 && row.metricValues) {
-              const item = {}
-              for (let idx = 0; idx < row.dimensionValues.length; idx++) {
-                const dimensionKey = <string>reportQuery.dimensions[idx].name
-                let dimensionValue = <string>row.dimensionValues[idx].value
-
-                for (const toReplace of removals) {
-                  dimensionValue = dimensionValue.replace(toReplace, '')
-                }
-
-                if (dimensionKey === 'pagePath') {
-                  if (dimensionValue !== '/') {
-                    dimensionValue = dimensionValue.replace(/\/$/, '')
-                  }
-                  pagePath = dimensionValue
-                } else {
-                  item[dimensionKey] = dimensionValue
-                }
-              }
-
-              for (let idx = 0; idx < row.metricValues.length; idx++) {
-                const metricKey = <string>reportQuery.metrics[idx].name
-                item[metricKey] = <string>row.metricValues[idx].value
-              }
-
-              results[pagePath] = item
-            }
-          }
-
-          if (alias === 'basic') {
-            results = {
-              pageViews: response.rows[0]?.metricValues[0].value,
-              totalVisitors: response.rows[0]?.metricValues[1].value,
-              newVisitors: response.rows[0]?.metricValues[2].value,
-              engagementRate: response.rows[0]?.metricValues[3].value
-            }
-          }
-        }
-
-        summary[alias] = results
-      }
+      const summary: Summary = await getReportData(analyticsData, reports)
 
       summary.popular = toArray(summary.popular)
       summary.trending = toArray(summary.trending)
 
-      const imageCount = await app.database.getFileCount()
-      summary.imageCount = imageCount
+      const fileCount = await app.database.getFileCount()
+      summary.fileCount = fileCount
 
       return summary
     })
