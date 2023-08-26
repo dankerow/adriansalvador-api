@@ -21,7 +21,7 @@
     "dayjs": "^1.11.9",
     "filesize": "^10.0.12",
     "jsonwebtoken": "^9.0.1",
-    "mongodb": "^5.7.0"
+    "mongodb": "^5.8.1"
   },
   "devDependencies": {
     "@fastify/cors": "^8.3.0",
@@ -30,16 +30,16 @@
     "@immobiliarelabs/fastify-sentry": "^6.0.10",
     "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.2",
-    "@types/node": "^20.5.1",
-    "@typescript-eslint/eslint-plugin": "^6.4.0",
-    "@typescript-eslint/parser": "^6.4.0",
+    "@types/node": "^20.5.6",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
     "dotenv": "^16.3.1",
-    "eslint": "^8.47.0",
+    "eslint": "^8.48.0",
     "eslint-plugin-import": "^2.28.1",
     "fastify": "4.21.0",
     "nodemon": "^3.0.1",
     "tsx": "^3.12.7",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   },
   "nodemonConfig": {
     "ext": "ts",
