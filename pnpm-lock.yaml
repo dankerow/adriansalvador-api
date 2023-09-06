@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@google-analytics/data':
-    specifier: ^4.0.0
-    version: 4.0.0
+    specifier: ^4.0.1
+    version: 4.0.1
   bcrypt:
     specifier: ^5.1.1
     version: 5.1.1
@@ -381,8 +381,8 @@ packages:
       tiny-lru: 11.0.1
     dev: true
 
-  /@google-analytics/data@4.0.0:
-    resolution: {integrity: sha512-3zRAjr6CP4o5sJTn+hE1OjxKzVWkY+Z1JIJ/eG/9cmVqlYA0NV8ILTiMt0NR72KCttuRRuB8KWmoL0XlWxi1lg==}
+  /@google-analytics/data@4.0.1:
+    resolution: {integrity: sha512-YhxMQuno21LF7W9sLZMPBuxJoRQ/A50kFvGJuZUmD4girm5PyEQDpew6vooUh7GjMcfpvM8b1XIIFk6pyFaBjA==}
     engines: {node: '>=14.0.0'}
     dependencies:
       google-gax: 4.0.3
