@@ -16,7 +16,7 @@
     "dev": "nodemon --loader tsx ."
   },
   "dependencies": {
-    "@google-analytics/data": "^4.0.0",
+    "@google-analytics/data": "^4.0.1",
     "bcrypt": "^5.1.1",
     "dayjs": "^1.11.9",
     "filesize": "^10.0.12",
