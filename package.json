@@ -30,13 +30,13 @@
     "@immobiliarelabs/fastify-sentry": "^7.1.0",
     "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.2",
-    "@types/node": "^20.5.9",
-    "@typescript-eslint/eslint-plugin": "^6.6.0",
-    "@typescript-eslint/parser": "^6.6.0",
+    "@types/node": "^20.6.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
     "dotenv": "^16.3.1",
-    "eslint": "^8.48.0",
+    "eslint": "^8.49.0",
     "eslint-plugin-import": "^2.28.1",
-    "fastify": "4.22.2",
+    "fastify": "4.23.0",
     "nodemon": "^3.0.1",
     "tsx": "^3.12.8",
     "typescript": "^5.2.2"
@@ -48,5 +48,5 @@
     ],
     "delay": 2500
   },
-  "packageManager": "pnpm@8.7.4"
+  "packageManager": "pnpm@8.7.5"
 }
