@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@fastify/cors": "^8.3.0",
-    "@fastify/helmet": "^11.0.0",
+    "@fastify/helmet": "^11.1.0",
     "@fastify/rate-limit": "^8.0.3",
     "@immobiliarelabs/fastify-sentry": "^7.1.0",
     "@types/bcrypt": "^5.0.0",
@@ -36,9 +36,9 @@
     "dotenv": "^16.3.1",
     "eslint": "^8.49.0",
     "eslint-plugin-import": "^2.28.1",
-    "fastify": "4.23.0",
+    "fastify": "4.23.1",
     "nodemon": "^3.0.1",
-    "tsx": "^3.12.8",
+    "tsx": "^3.12.10",
     "typescript": "^5.2.2"
   },
   "nodemonConfig": {
