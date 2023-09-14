@@ -36,7 +36,7 @@
     "dotenv": "^16.3.1",
     "eslint": "^8.49.0",
     "eslint-plugin-import": "^2.28.1",
-    "fastify": "4.23.1",
+    "fastify": "4.23.2",
     "nodemon": "^3.0.1",
     "tsx": "^3.12.10",
     "typescript": "^5.2.2"
