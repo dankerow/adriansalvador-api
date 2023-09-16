@@ -35,17 +35,17 @@ devDependencies:
     specifier: ^8.0.3
     version: 8.0.3
   '@immobiliarelabs/fastify-sentry':
-    specifier: ^7.1.0
-    version: 7.1.0
+    specifier: ^7.1.1
+    version: 7.1.1
   '@types/bcrypt':
     specifier: ^5.0.0
     version: 5.0.0
   '@types/jsonwebtoken':
-    specifier: ^9.0.2
-    version: 9.0.2
+    specifier: ^9.0.3
+    version: 9.0.3
   '@types/node':
-    specifier: ^20.6.0
-    version: 20.6.0
+    specifier: ^20.6.2
+    version: 20.6.2
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.7.0
     version: 6.7.0(@typescript-eslint/parser@6.7.0)(eslint@8.49.0)(typescript@5.2.2)
@@ -396,7 +396,7 @@ packages:
     engines: {node: ^8.13.0 || >=10.10.0}
     dependencies:
       '@grpc/proto-loader': 0.7.5
-      '@types/node': 20.6.0
+      '@types/node': 20.6.2
     dev: false
 
   /@grpc/proto-loader@0.7.5:
@@ -431,8 +431,8 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
 
-  /@immobiliarelabs/fastify-sentry@7.1.0:
-    resolution: {integrity: sha512-j2aQ7rVx4jU1vhpcGAmPLFkY8lZSbdeQKR9pKweEmPFZcAUMjjA+8wtuPoqEE5QxbYtK8Qruy+Rb/2lfrEl6JQ==}
+  /@immobiliarelabs/fastify-sentry@7.1.1:
+    resolution: {integrity: sha512-V6cIMLhufo81td6nPP7Y/ISgh+MaxH/FXQ7VfGnsPBq6l/B6L2d00mcOe7ER0oHfm0bIwGQa/KdvaGyz5nEVbw==}
     engines: {node: '>=16', npm: '>=8'}
     dependencies:
       '@sentry/node': 7.60.0
@@ -591,7 +591,7 @@ packages:
   /@types/bcrypt@5.0.0:
     resolution: {integrity: sha512-agtcFKaruL8TmcvqbndlqHPSJgsolhf/qPWchFlgnW1gECTN/nKbFcoFnvKAQRFfKbh+BO6A3SWdJu9t+xF3Lw==}
     dependencies:
-      '@types/node': 20.6.0
+      '@types/node': 20.6.2
     dev: true
 
   /@types/json-schema@7.0.12:
@@ -602,18 +602,18 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
-  /@types/jsonwebtoken@9.0.2:
-    resolution: {integrity: sha512-drE6uz7QBKq1fYqqoFKTDRdFCPHd5TCub75BM+D+cMx7NU9hUz7SESLfC2fSCXVFMO5Yj8sOWHuGqPgjc+fz0Q==}
+  /@types/jsonwebtoken@9.0.3:
+    resolution: {integrity: sha512-b0jGiOgHtZ2jqdPgPnP6WLCXZk1T8p06A/vPGzUvxpFGgKMbjXJDjC5m52ErqBnIuWZFgGoIJyRdeG5AyreJjA==}
     dependencies:
-      '@types/node': 20.6.0
+      '@types/node': 20.6.2
     dev: true
 
   /@types/long@4.0.2:
     resolution: {integrity: sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==}
     dev: false
 
-  /@types/node@20.6.0:
-    resolution: {integrity: sha512-najjVq5KN2vsH2U/xyh2opaSEz6cZMR2SetLIlxlj08nOcmPOemJmUK2o4kUzfLqfrWE0PIrNeE16XhYDd3nqg==}
+  /@types/node@20.6.2:
+    resolution: {integrity: sha512-Y+/1vGBHV/cYk6OI1Na/LHzwnlNCAfU3ZNGrc1LdRe/LAIbdDPTTv/HU3M7yXN448aTVDq3eKRm2cg7iKLb8gw==}
 
   /@types/semver@7.5.0:
     resolution: {integrity: sha512-G8hZ6XJiHnuhQKR7ZmysCeJWE08o8T0AXtk5darsCaTVsYZhhgUrq53jizaR2FvsoeCwJhlmwTjkXBY5Pn/ZHw==}
@@ -626,7 +626,7 @@ packages:
   /@types/whatwg-url@8.2.2:
     resolution: {integrity: sha512-FtQu10RWgn3D9U4aazdwIE2yzphmTJREDqNdODHrbrZmmMqI0vMheC/6NE/J1Yveaj8H+ela+YwWTjq5PGmuhA==}
     dependencies:
-      '@types/node': 20.6.0
+      '@types/node': 20.6.2
       '@types/webidl-conversions': 7.0.0
     dev: false
 
@@ -2621,7 +2621,7 @@ packages:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 20.6.0
+      '@types/node': 20.6.2
       long: 5.2.1
     dev: false
 
