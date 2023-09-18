@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@fastify/cors": "^8.3.0",
-    "@fastify/helmet": "^11.1.0",
+    "@fastify/helmet": "^11.1.1",
     "@fastify/rate-limit": "^8.0.3",
     "@immobiliarelabs/fastify-sentry": "^7.1.1",
     "@types/bcrypt": "^5.0.0",
@@ -48,5 +48,5 @@
     ],
     "delay": 2500
   },
-  "packageManager": "pnpm@8.7.5"
+  "packageManager": "pnpm@8.7.6"
 }
