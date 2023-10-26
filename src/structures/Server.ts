@@ -9,6 +9,7 @@ import helmet from '@fastify/helmet'
 import cors from '@fastify/cors'
 import rateLimit from '@fastify/rate-limit'
 import sentry from '@immobiliarelabs/fastify-sentry'
+import * as jwt from 'jsonwebtoken'
 
 import { Database } from '../managers'
 import { Logger as logger } from '../utils'
@@ -29,11 +30,14 @@ export class Server {
     })
 
     this.routers = []
-
     this.logger = logger
     this.database = new Database()
   }
 
+  /**
+   * @description Sets up the application by registering middleware, error handler, and initializing the database.
+   * @returns {Promise<void>} A promise that resolves when the setup is complete.
+   */
   public async setup(): Promise<void> {
     await this.app.register(helmet, {
       crossOriginResourcePolicy: false
@@ -52,17 +56,31 @@ export class Server {
         global: true,
         ban: 3,
         max: 100,
-        keyGenerator: (req) => req.headers.authorization || req.ip,
+        keyGenerator: (req) => {
+          if (req.headers.authorization) {
+            const token = req.headers.authorization.split(' ')[1]
+            try {
+              const decoded = jwt.verify(token, process.env.JWT_SECRET) as { id: string }
+
+              return decoded.id
+            } catch (err) {
+              return req.ip
+            }
+          }
+
+          return req.ip
+        },
         errorResponseBuilder: () => ({ status: 429, message: 'Too many requests, please you need to slow down, try again later.' })
       })
 
-    this.app.setErrorHandler((error, req, reply) => {
+    this.app.setErrorHandler((error, _req, reply) => {
       logger.error(`Something went wrong.\nError: ${error.stack || error}`)
 
       reply.code(error.statusCode).send({
-        success: false,
-        status: error.statusCode,
-        message: error.message ?? 'Oops! Something went wrong. Try again later.'
+        error: {
+          status: error.statusCode,
+          message: error.message ?? 'Oops! Something went wrong. Try again later.'
+        }
       })
     })
 
@@ -78,13 +96,13 @@ export class Server {
   /**
    * @description A method to create a connection to the database
    * @private
-   * @returns void
+   * @returns Promise<void>
    */
   private async initializeDatabase(): Promise<void> {
     await this.database.connect()
     this.app.decorate('database', this.database)
 
-    this.app.addHook('onClose', async (instance, done) => {
+    this.app.addHook('onClose', async (_instance, done) => {
       await this.database.close()
       done()
     })
@@ -98,39 +116,55 @@ export class Server {
    * @description Loads the routes on the HTTP Server instance
    * @param directory The path to the routes directory
    * @param prefix Prefix used load the routes following the file structure
-   * @returns void
+   * @returns Promise<void>
    * @private
    */
   private async loadRoutes(directory: string, prefix: string | boolean = false): Promise<void> {
     const routes = await readdir(directory)
 
-    if (routes.length > 0) {
-      for (let i = 0; i < routes.length; i++) {
-        const stats = await stat(join(directory, routes[i]))
+    for (const route of routes) {
+      const stats = await stat(join(directory, route))
 
-        if (stats.isDirectory()) {
-          await this.loadRoutes(join(directory, routes[i]), routes[i].replace('/', ''))
-          return
-        } else {
-          const routeFile = relative(__dirname, join(directory, routes[i])).replaceAll('\\', '/')
-          const routeImport = await import(routeFile)
-          const RouteClass = routeImport.default
-          const route = new RouteClass(this)
+      if (stats.isDirectory()) {
+        await this.loadRoutes(join(directory, route), route.replace('/', ''))
 
-          if (prefix) {
-            route.path = `/${prefix}${route.path}`
-          }
-
-          this.routers.push(route)
-        }
-
-        if (i + 1 === routes.length) {
-          await this.registerRoutes()
-        }
+        continue
       }
+
+      const routeFile = relative(__dirname, join(directory, route)).replaceAll('\\', '/')
+      const routeImport = await import(routeFile)
+      const RouteClass = routeImport.default
+      const routeInstance = new RouteClass(this)
+
+      if (prefix) {
+        routeInstance.path = `/${prefix}${routeInstance.path}`
+      }
+
+      this.routers.push(routeInstance)
+    }
+
+    if (this.routers.length > 0) {
+      await this.registerRoutes()
     } else {
       this.listen()
     }
+  }
+
+  /**
+   * @description Loads the specified middlewares dynamically.
+   * @param {string[]} middlewares - The names of the middlewares to load.
+   * @return {Promise<any[]>} - A promise that resolves with an array of imported middlewares.
+   */
+  private async loadMiddlewares(middlewares: string[]): Promise<any[]> {
+    const importedMiddlewares = []
+
+    for (const middleware of middlewares) {
+      const importedMiddlewarePath = relative(__dirname, join('src', 'middlewares', middleware)).replaceAll('\\', '/')
+      const importedMiddleware = await import(importedMiddlewarePath)
+      importedMiddlewares.push(importedMiddleware.default)
+    }
+
+    return importedMiddlewares
   }
 
   /**
@@ -139,23 +173,10 @@ export class Server {
    * @returns void
    */
   private async registerRoutes(): Promise<void> {
-    this.routers.sort((a, b) => {
-      if (a.position > b.position) return 1
-      if (b.position > a.position) return -1
-      return 0
-    })
+    this.routers.sort((a, b) => a.position - b.position)
 
-    for (let i = 0; i < this.routers.length; i++) {
-      const route = this.routers[i]
-
-      const middlewares = []
-      if (route.middlewares?.length) {
-        for (const middleware of route.middlewares) {
-          const importedMiddlewarePath = relative(__dirname, join('src', 'middlewares', middleware)).replaceAll('\\', '/')
-          const importedMiddleware = await import(importedMiddlewarePath)
-          middlewares.push(importedMiddleware.default)
-        }
-      }
+    for (const router of this.routers) {
+      const middlewares = router.middlewares?.length ? await this.loadMiddlewares(router.middlewares) : []
 
       await this.app.register((app, options, done) => {
         app.addHook('onRoute', (routeOptions) => {
@@ -166,17 +187,19 @@ export class Server {
           return
         })
 
-        route.routes(app, options, done)
-      }, { prefix: route.path })
-
-      if (i + 1 === this.routers.length) {
-        process.send({ type: 'log', content: `Loaded ${this.routers.length} routes.` })
-
-        this.listen()
-      }
+        router.routes(app, options, done)
+      }, { prefix: router.path })
     }
+
+    process.send({ type: 'log', content: `Loaded ${this.routers.length} routes.` })
+
+    this.listen()
   }
 
+  /**
+   * @description Listens for incoming requests on the specified port.
+   * @return {void}
+   */
   private listen(): void {
     this.app.listen({ port: parseInt(process.env.PORT) }, (error, address) => {
       if (error) return process.send({ type: 'error', content: error.stack || error })
