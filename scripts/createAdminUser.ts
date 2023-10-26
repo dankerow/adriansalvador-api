@@ -9,34 +9,39 @@ import { generatePassword } from '../src/utils'
 const database = new Database()
 await database.connect()
 
-const loader = async () => {
-  const user = await database.getUserByEmail('admin@salvadoradrian.com')
-  if (user) return console.log('Admin user already created')
+const create = async () => {
+  const email = 'admin@salvadoradrian.com'
+  const user = await database.getUserByEmail(email)
+
+  if (user) return console.log('Admin user already created.')
 
   const userId = crypto.randomUUID()
+
+  const currentTime = new Date().getTime()
 
   const metadata = {
     firstName: 'Admin',
     lastName: '',
     role: 'admin',
     avatar: '',
-    createdAt: +new Date(),
-    modifiedAt: +new Date()
+    createdAt: currentTime,
+    modifiedAt: currentTime
   }
+
+  const rawPassword = generatePassword(16)
+  const hashedPassword = bcrypt.hashSync(rawPassword, 10)
 
   const credentials = {
     email: 'admin@salvadoradrian.com',
-    password: generatePassword(16),
-    createdAt: +new Date(),
-    modifiedAt: +new Date()
+    password: hashedPassword,
+    createdAt: currentTime,
+    modifiedAt: currentTime
   }
 
-  console.log('Credentials:', credentials.email, credentials.password)
-
-  credentials.password = bcrypt.hashSync(credentials.password, 10)
+  console.log('Credentials:', email, rawPassword)
 
   await database.insertUserMetadata({ id: userId, ...metadata })
   await database.insertUserCredentials({ id: userId, ...credentials })
 }
 
-await loader()
+await create()
