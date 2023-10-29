@@ -24,7 +24,7 @@
     "mongodb": "^6.2.0"
   },
   "devDependencies": {
-    "@fastify/cors": "^8.4.0",
+    "@fastify/cors": "^8.4.1",
     "@fastify/helmet": "^11.1.1",
     "@fastify/rate-limit": "^8.0.3",
     "@immobiliarelabs/fastify-sentry": "^7.1.1",
