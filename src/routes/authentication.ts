@@ -1,8 +1,15 @@
 import type { User } from '../../types'
+import type { FastifyInstance, RegisterOptions, DoneFuncWithErrOrRes } from 'fastify'
 
 import { Route } from '../structures'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+
+interface IBody {
+  email: string
+  password: string
+  user?: User
+}
 
 export default class Authentication extends Route {
   constructor() {
@@ -13,8 +20,8 @@ export default class Authentication extends Route {
     })
   }
 
-  async routes(app, _options, done) {
-    const createToken = (user: User) => {
+  async routes(app: FastifyInstance, _options: RegisterOptions, done: DoneFuncWithErrOrRes) {
+    const createToken = (user: Omit<User, 'password'>) => {
       return jwt.sign(user, process.env.AUTH_SECRET, {
         expiresIn: '3h',
         issuer: 'adriansalvador',
@@ -22,7 +29,9 @@ export default class Authentication extends Route {
       })
     }
 
-    app.post('/login', {
+    app.post<{
+      Body: IBody
+    }>('/login', {
       config: {
         auth: false
       },
@@ -62,8 +71,10 @@ export default class Authentication extends Route {
       return { token, user }
     })
 
-    app.get('/verify', (req) => {
-      return req.user
+    app.get<{
+      Body: IBody
+    }>('/verify', (req) => {
+      return req.body.user
     })
 
     done()
