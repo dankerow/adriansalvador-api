@@ -32,7 +32,6 @@ interface Summary {
   fileCount?: number
 }
 
-
 export default class Analytics extends Route {
   constructor() {
     super({
@@ -56,7 +55,7 @@ export default class Analytics extends Route {
       orderBys
     })
 
-    const fillDimensionsandPagePath = (item: any, removals: string[], reportQuery: ReportStructure, row: any, pagePath: string) => {
+    const fillDimensionsAndPagePath = (item: any, removals: string[], reportQuery: ReportStructure, row: any, pagePath: string) => {
       row.dimensionValues.forEach((dimension, idx) => {
         let dimensionValue = dimension.value
 
@@ -94,7 +93,7 @@ export default class Analytics extends Route {
             const item = {}
             let pagePath
 
-            fillDimensionsandPagePath(item, removals, reportQuery, row, pagePath)
+            fillDimensionsAndPagePath(item, removals, reportQuery, row, pagePath)
             fillMetrics(item, reportQuery, row)
 
             results[pagePath] = item
@@ -158,9 +157,6 @@ export default class Analytics extends Route {
 
       summary.popular = toArray(summary.popular)
       summary.trending = toArray(summary.trending)
-
-      const fileCount = await app.database.getFileCount()
-      summary.fileCount = fileCount
 
       return summary
     })
