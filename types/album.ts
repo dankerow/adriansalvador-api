@@ -1,15 +1,5 @@
-export interface User {
-  readonly id: string
-  firstName: string
-  lastName: string
-  email: string
-  role: string
-  readonly createdAt: string
-  readonly updatedAt: string
-}
-
 export interface AlbumFile {
-  id: string
+  readonly id: string
   name: string
   url?: string
   type: string
@@ -23,7 +13,7 @@ export interface AlbumFile {
 }
 
 export interface Album {
-  id: string
+  readonly id: string
   name: string
   url?: string
   draft: boolean
