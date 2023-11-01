@@ -1,3 +1,5 @@
+import type { FastifyInstance, RegisterOptions, DoneFuncWithErrOrRes } from 'fastify'
+
 import { Route } from '../structures'
 import { toArray } from '../utils'
 import { BetaAnalyticsDataClient } from '@google-analytics/data'
@@ -25,6 +27,10 @@ interface ReportStructure {
   orderBys?: Array<OrderBys>
 }
 
+interface Results {
+  [key: string]: any
+}
+
 interface Summary {
   basic?: object
   popular?: Array<object>
@@ -41,7 +47,7 @@ export default class Analytics extends Route {
     })
   }
 
-  routes(app, _options, done) {
+  routes(app: FastifyInstance, _options: RegisterOptions, done: DoneFuncWithErrOrRes) {
     const reportStructure = (startDate: string, dimensions: Array<{ name: string }>, metrics: Array<{ name: string }>, orderBys?: Array<{ metric: { metricName: string }; desc: boolean }>): ReportStructure => ({
       property: 'properties/325424669',
       dateRanges: [
@@ -84,7 +90,7 @@ export default class Analytics extends Route {
     }
 
     const getResults = (reportQuery: ReportStructure, response: any, alias: string) => {
-      const results = {}
+      const results: Results = {}
       const removals = []
 
       if (response && response.rows) {
