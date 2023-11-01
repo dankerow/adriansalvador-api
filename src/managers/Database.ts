@@ -1,6 +1,8 @@
-import type { Db } from 'mongodb'
-import { MongoClient } from 'mongodb'
+import type { Album, AlbumFile } from '../../types'
+import type { Db, WithId } from 'mongodb'
+
 import { EventEmitter } from 'node:events'
+import { MongoClient } from 'mongodb'
 
 export class Database extends EventEmitter {
   private client: MongoClient
@@ -85,7 +87,7 @@ export class Database extends EventEmitter {
       .toArray()
   }
 
-  getAlbumById(id) {
+  getAlbumById(id: string): Promise<Album> {
     return this.mongoCDN
       .collection('albums')
       .aggregate([
@@ -98,7 +100,7 @@ export class Database extends EventEmitter {
         { $project: { _id: 0 } }
       ])
       .limit(1)
-      .next()
+      .next() as Promise<Album>
   }
 
   getAlbums(params: { status?: string; favorites?: boolean; featured?: boolean; search?: string; sort?: string; order?: string; skip?: number; limit?: number } = {}) {
@@ -132,10 +134,10 @@ export class Database extends EventEmitter {
           numericOrdering: true
         }
       })
-      .toArray()
+      .toArray() as Promise<WithId<Album>[]>
   }
 
-  getAlbumCount() {
+  getAlbumCount(): Promise<number> {
     return this.mongoCDN
       .collection('albums')
       .countDocuments()
@@ -154,17 +156,17 @@ export class Database extends EventEmitter {
       .toArray()
   }
 
-  getAlbumFiles(albumId) {
+  getAlbumFiles(albumId: string): Promise<WithId<AlbumFile>[]> {
     return this.mongoCDN
       .collection('files')
       .aggregate([
         { $match: { albumId } },
         { $project: { _id: 0 } }
       ])
-      .toArray()
+      .toArray() as Promise<WithId<AlbumFile>[]>
   }
 
-  getAlbumFileCount(albumId) {
+  getAlbumFileCount(albumId: string) {
     return this.mongoCDN
       .collection('files')
       .aggregate([
@@ -175,7 +177,7 @@ export class Database extends EventEmitter {
       .next()
   }
 
-  getAlbumFilesWithFields(id, fields) {
+  getAlbumFilesWithFields(id: string, fields: string[]) {
     const project = {}
 
     for (let i = 0; i < fields.length; i++) {
@@ -235,7 +237,7 @@ export class Database extends EventEmitter {
       .countDocuments()
   }
 
-  findAlbumByName(name) {
+  findAlbumByName(name: string): Promise<WithId<Album>> {
     return this.mongoCDN
       .collection('albums')
       .aggregate([
@@ -249,7 +251,7 @@ export class Database extends EventEmitter {
         { $project: { _id: 0, lowerName: 0 } }
       ])
       .limit(1)
-      .next()
+      .next() as Promise<WithId<Album>>
   }
 
   findFileByName(name) {
@@ -278,7 +280,7 @@ export class Database extends EventEmitter {
       .insertOne(document)
   }
 
-  insertAlbum(document) {
+  insertAlbum(document: Album) {
     return this.mongoCDN
       .collection('albums')
       .insertOne(document)
@@ -296,7 +298,7 @@ export class Database extends EventEmitter {
       .updateOne({ id }, { $set: fields })
   }
 
-  updateAlbum(id, fields) {
+  updateAlbum(id: string, fields: Omit<Partial<Album>, 'id' | 'createdAt'>) {
     return this.mongoCDN
       .collection('albums')
       .updateOne({ id }, { $set: fields })
@@ -308,19 +310,19 @@ export class Database extends EventEmitter {
       .updateOne({ id }, { $set: fields })
   }
 
-  deleteAlbum(id) {
+  deleteAlbum(id: string) {
     return this.mongoCDN
       .collection('albums')
       .deleteOne({ id })
   }
 
-  deleteAlbums(ids) {
+  deleteAlbums(ids: string[]) {
     return this.mongoCDN
       .collection('albums')
       .deleteMany({ id: { $in: ids } })
   }
 
-  deleteAlbumFiles(albumId) {
+  deleteAlbumFiles(albumId: string) {
     return this.mongoCDN
       .collection('files')
       .deleteMany({ albumId })

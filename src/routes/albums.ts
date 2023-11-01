@@ -1,5 +1,19 @@
+import type { Album } from '../../types'
+import type { FastifyInstance, FastifyReply, FastifyRequest, RegisterOptions, DoneFuncWithErrOrRes } from 'fastify'
+
 import { Route } from '../structures'
 import { filesize } from 'filesize'
+
+interface IParams {
+  id: string
+}
+
+interface IBody extends Partial<Album> {
+  name: string
+  description: string
+  image?: string
+  album?: Album
+}
 
 export default class Albums extends Route {
   constructor() {
@@ -10,18 +24,43 @@ export default class Albums extends Route {
     })
   }
 
-  routes(app, _options, done) {
-    const getAlbum = async (req, reply) => {
-      if (!req.params.id) return reply.code(404).send({ error: { status: 404, message: 'Album not found' } })
+  routes(app: FastifyInstance, _options: RegisterOptions, done: DoneFuncWithErrOrRes) {
+    const getAlbum = async (req: FastifyRequest<{ Params: IParams; Body: IBody }>, reply: FastifyReply) => {
+      if (!req.params.id) {
+        return reply.code(404).send({
+          error: {
+            status: 404,
+            message: 'Album not found'
+          }
+        })
+      }
 
       const album = await app.database.getAlbumById(req.params.id)
 
-      if (!album) return reply.code(404).send({ error: { status: 404, message: 'Album not found' } })
+      if (!album) {
+        return reply.code(404).send({
+          error: {
+            status: 404,
+            message: 'Album not found'
+          }
+        })
+      }
 
-      return req.album = album
+      return req.body.album = album
     }
 
-    app.get('/', {
+    app.get<{
+      Querystring: {
+        status?: string
+        favorites?: boolean
+        featured?: boolean
+        search?: string
+        sort?: string
+        order?: 'asc' | 'desc'
+        page?: number
+        limit?: number
+      }
+    }>('/', {
       config: {
         auth: false
       },
@@ -70,7 +109,10 @@ export default class Albums extends Route {
       }
     })
 
-    app.get('/:id', {
+    app.get<{
+      Params: IParams
+      Body: IBody
+    }>('/:id', {
       config: {
         auth: false
       },
@@ -84,24 +126,35 @@ export default class Albums extends Route {
       },
       preHandler: [getAlbum]
     }, async (req) => {
-      req.album.fileCount = (await app.database.getAlbumFileCount(req.album.id))?.count ?? 0
+      req.body.album.fileCount = (await app.database.getAlbumFileCount(req.body.album.id))?.count ?? 0
 
-      return req.album
+      return req.body.album
     })
 
-    app.post('/:id/publish', {
+    app.post<{
+      Body: IBody
+    }>('/:id/publish', {
       preHandler: [getAlbum]
     }, async (req) => {
-      return await app.database.updateAlbum(req.album.id, { draft: false, postedAt: +new Date() })
+      return await app.database.updateAlbum(req.body.album.id, { draft: false, postedAt: +new Date() })
     })
 
-    app.post('/:id/unpublish', {
+    app.post<{
+      Body: IBody
+    }>('/:id/unpublish', {
       preHandler: [getAlbum]
     }, async (req) => {
-      return await app.database.updateAlbum(req.album.id, { draft: true, postedAt: null })
+      return await app.database.updateAlbum(req.body.album.id, { draft: true, postedAt: null })
     })
 
-    app.get('/:id/files', {
+    app.get<{
+      Params: IParams
+      Querystring: {
+        page?: number
+        limit?: number
+      }
+      Body: IBody
+    }>('/:id/files', {
       config: {
         auth: false
       },
@@ -124,9 +177,9 @@ export default class Albums extends Route {
     }, async (req) => {
       const page = req.query.page ? parseInt(req.query.page) : 1
       const limit = req.query.limit ? parseInt(req.query.limit) : 25
-      const pages = (imageCount) => Math.ceil(imageCount / limit)
+      const pages = (imageCount: number) => Math.ceil(imageCount / limit)
 
-      let files = await app.database.getAlbumFiles(req.album.id)
+      let files = await app.database.getAlbumFiles(req.body.album.id)
       const count = files.length
 
       if (limit !== -1) { // -1 means no limit
