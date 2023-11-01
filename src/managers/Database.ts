@@ -101,12 +101,18 @@ export class Database extends EventEmitter {
       .next()
   }
 
-  getAlbums(params) {
+  getAlbums(params: { status?: string; favorites?: boolean; featured?: boolean; search?: string; sort?: string; order?: string; skip?: number; limit?: number } = {}) {
     const aggregation = []
-    if (params.favorite) aggregation.push({ $match: { favorite: true } })
+
+    if (params.status && params.status !== 'all') {
+      aggregation.push({ $match: { draft: params.status === 'draft' ?? params.status !== 'posted' } })
+    }
+
+    if (params.favorites) aggregation.push({ $match: { favorite: true } })
     if (params.featured) aggregation.push({ $match: { featured: true } })
+
     if (params.search) aggregation.push({ $match: { name: { $regex: params.search, $options: 'i' } } })
-    if (params.sort) aggregation.push({ $addFields: { lowerName: { $toLower: '$name' } } }, { $sort: params.sort })
+    if (params.sort) aggregation.push({ $addFields: { lowerName: { $toLower: '$name' } } }, { $sort: { [params.sort]: params.order === 'asc' ? 1 : -1 } })
     if (params.skip) aggregation.push({ $skip: params.skip })
     if (params.limit) aggregation.push({ $limit: params.limit })
 
@@ -135,10 +141,11 @@ export class Database extends EventEmitter {
       .countDocuments()
   }
 
-  getRandomImages(limit) {
+  getRandomAlbumsImages(limit) {
     return this.mongoCDN
       .collection('files')
       .aggregate([
+        { $match: { albumId: { $ne: null } } },
         { $sample: { size: limit } },
         { $lookup: { from: 'albums', localField: 'albumId', foreignField: 'id', as: 'album' } },
         { $addFields: { album: { $arrayElemAt: ['$album', 0] } } },
@@ -181,6 +188,28 @@ export class Database extends EventEmitter {
         { $match: { albumId: { $in: [id] } } },
         { $project: { _id: 0, ...project } }
       ])
+      .toArray()
+  }
+
+  getFiles(params: { search?: string; sort?: string; order?: string; skip?: number; limit?: number } = {}) {
+    const aggregation = []
+
+    if (params.search) aggregation.push({ $match: { name: { $regex: params.search, $options: 'i' } } })
+    if (params.sort) aggregation.push({ $addFields: { lowerName: { $toLower: '$name' } } }, { $sort: { [params.sort]: params.order === 'asc' ? 1 : -1 } })
+    if (params.skip) aggregation.push({ $skip: params.skip })
+    if (params.limit) aggregation.push({ $limit: params.limit })
+
+    return this.mongoCDN
+      .collection('files')
+      .aggregate([
+        ...aggregation,
+        { $project: { _id: 0, lowerName: 0 } }
+      ], {
+        collation: {
+          locale: 'en_US',
+          numericOrdering: true
+        }
+      })
       .toArray()
   }
 
