@@ -1,3 +1,5 @@
+import type { FastifyInstance, RegisterOptions, DoneFuncWithErrOrRes } from 'fastify'
+
 import { Route } from '../structures'
 
 export default class Sitemap extends Route {
@@ -8,7 +10,7 @@ export default class Sitemap extends Route {
     })
   }
 
-  routes(app, options, done) {
+  routes(app: FastifyInstance, _options: RegisterOptions, done: DoneFuncWithErrOrRes) {
     app.get('/', async () => {
       const routes: object[] = []
       const albums = await app.database.getAlbums({ sort: { name: 1 } })
