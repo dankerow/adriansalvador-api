@@ -177,6 +177,23 @@ export class Database extends EventEmitter {
       .next()
   }
 
+  getUserCredentialsWithFields(id: string, fields: string[]) {
+    const project = {}
+
+    for (let i = 0; i < fields.length; i++) {
+      project[fields[i]] = '$' + fields[i]
+    }
+
+    return this.mongoUsers
+      .collection('credentials')
+      .aggregate([
+        { $match: { id: { $in: [id] } } },
+        { $project: { _id: 0, ...project } }
+      ])
+      .limit(1)
+      .next() as Promise<WithId<Partial<UserCredentials>>>
+  }
+
   getAlbumFilesWithFields(id: string, fields: string[]) {
     const project = {}
 
@@ -290,6 +307,12 @@ export class Database extends EventEmitter {
     return this.mongoCDN
       .collection('files')
       .insertOne(document)
+  }
+
+  updateUserCredentials(id: string, fields: Omit<Partial<UserCredentials>, 'id' | 'createdAt'>) {
+    return this.mongoUsers
+      .collection('credentials')
+      .updateOne({ id }, { $set: fields })
   }
 
   updateAlbum(id: string, fields: Omit<Partial<Album>, 'id' | 'createdAt'>) {
