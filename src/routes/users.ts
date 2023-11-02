@@ -1,8 +1,8 @@
-import type { User } from '../../types'
+import type { User } from '@/types'
 import type { FastifyInstance, FastifyReply, FastifyRequest, RegisterOptions, DoneFuncWithErrOrRes } from 'fastify'
 
-import { Route } from '../structures'
-import { generatePassword } from '../utils'
+import { Route } from '@/structures'
+import { generatePassword } from '@/utils'
 import crypto from 'node:crypto'
 import bcrypt from 'bcrypt'
 

@@ -1,7 +1,7 @@
-import type { Album } from '../../types'
+import type { Album } from '@/types'
 import type { FastifyInstance, FastifyReply, FastifyRequest, RegisterOptions, DoneFuncWithErrOrRes } from 'fastify'
 
-import { Route } from '../structures'
+import { Route } from '@/structures'
 import { filesize } from 'filesize'
 
 interface IParams {

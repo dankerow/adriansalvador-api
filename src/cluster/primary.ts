@@ -3,7 +3,7 @@ import 'dotenv/config'
 import type { Worker } from 'node:cluster'
 import cluster from 'node:cluster'
 import os from 'node:os'
-import { Logger } from '../utils'
+import { Logger } from '@/utils'
 
 const workers: Map<number, Worker> = new Map()
 const workersLength: number = (process.env.WORKERS_NUMBER ? parseInt(process.env.WORKERS_NUMBER) : false) || os.cpus().length

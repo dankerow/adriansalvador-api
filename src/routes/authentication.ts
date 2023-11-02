@@ -1,7 +1,7 @@
-import type { User } from '../../types'
+import type { User } from '@/types'
 import type { FastifyInstance, RegisterOptions, DoneFuncWithErrOrRes } from 'fastify'
 
-import { Route } from '../structures'
+import { Route } from '@/structures'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 

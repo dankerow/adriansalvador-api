@@ -1,9 +1,10 @@
+import type { FastifyInstance } from 'fastify'
+import type { Route } from './Route'
+
 import { dirname, join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { readdir, stat } from 'node:fs/promises'
 
-import type { FastifyInstance } from 'fastify'
-import type { Route } from './Route'
 import Fastify from 'fastify'
 import helmet from '@fastify/helmet'
 import cors from '@fastify/cors'
@@ -11,8 +12,8 @@ import rateLimit from '@fastify/rate-limit'
 import sentry from '@immobiliarelabs/fastify-sentry'
 import * as jwt from 'jsonwebtoken'
 
-import { Database } from '../managers'
-import { Logger as logger } from '../utils'
+import { Database } from '@/managers'
+import { Logger as logger } from '@/utils'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 

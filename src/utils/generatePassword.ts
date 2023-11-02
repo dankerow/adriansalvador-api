@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 
-export const generatePassword = (length) => {
+export const generatePassword = (length: number) => {
   const allowedChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]\:;?><,./-='
   let password = ''
   const randomBytes = crypto.randomBytes(length)

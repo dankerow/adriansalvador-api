@@ -1,7 +1,7 @@
 import type { FastifyInstance, RegisterOptions, DoneFuncWithErrOrRes } from 'fastify'
 
-import { Route } from '../structures'
-import { toArray } from '../utils'
+import { Route } from '@/structures'
+import { toArray } from '@/utils'
 import { BetaAnalyticsDataClient } from '@google-analytics/data'
 
 import key from '../keys/adrian-salvador-website-9e67e3e8a223.json' assert { type: 'json' }

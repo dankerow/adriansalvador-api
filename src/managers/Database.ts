@@ -1,4 +1,4 @@
-import type { Album, AlbumFile, User, UserMetadata, UserCredentials } from '../../types'
+import type { Album, AlbumFile, User, UserMetadata, UserCredentials } from '@/types'
 import type { Db, WithId } from 'mongodb'
 
 import { EventEmitter } from 'node:events'

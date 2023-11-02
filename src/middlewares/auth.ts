@@ -1,4 +1,4 @@
-import type { User } from '../../types'
+import type { User } from '@/types'
 import type { FastifyReply, FastifyRequest, DoneFuncWithErrOrRes } from 'fastify'
 
 import jwt from 'jsonwebtoken'
