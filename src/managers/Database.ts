@@ -292,12 +292,6 @@ export class Database extends EventEmitter {
       .insertOne(document)
   }
 
-  updateUserSession(id: string, fields: object) {
-    return this.mongoUsers
-      .collection('sessions')
-      .updateOne({ id }, { $set: fields })
-  }
-
   updateAlbum(id: string, fields: Omit<Partial<Album>, 'id' | 'createdAt'>) {
     return this.mongoCDN
       .collection('albums')
