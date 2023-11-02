@@ -1,10 +1,28 @@
+import type { User } from '../../types'
+import type { FastifyInstance, FastifyReply, FastifyRequest, RegisterOptions, DoneFuncWithErrOrRes } from 'fastify'
+
 import { Route } from '../structures'
+import { generatePassword } from '../utils'
+import crypto from 'node:crypto'
 import bcrypt from 'bcrypt'
 import dayjs from 'dayjs'
 import utcPlugin from 'dayjs/plugin/utc'
-import crypto from 'node:crypto'
-import { generatePassword } from '../utils'
+
 dayjs.extend(utcPlugin)
+
+interface IParams {
+  id: string
+}
+
+interface IBody {
+  firstName: string
+  lastName: string
+  email: string
+  role: string
+  password: string
+  newPassword: string
+  user?: Omit<User, 'password'>
+}
 
 export default class Users extends Route {
   constructor() {
@@ -15,11 +33,11 @@ export default class Users extends Route {
     })
   }
 
-  async routes(app, options, done) {
-    const getUser = async (req, reply) => {
+  async routes(app: FastifyInstance, _options: RegisterOptions, done: DoneFuncWithErrOrRes) {
+    const getUser = async (req: FastifyRequest<{ Params: IParams; Body: IBody }>, reply: FastifyReply) => {
       if (req.params.id.length > 100) return reply.status(404).send({ status: 404, message: 'The user you are looking for does not exist.' })
-      if (req.params.id === '@me' && req.user) {
-        return req.user
+      if (req.params.id === '@me' && req.body.user) {
+        return req.body.user
       }
 
       const user = await app.database.getUserById(req.params.id)
@@ -28,10 +46,15 @@ export default class Users extends Route {
         return reply.status(404).send({ status: 404, message: 'The user you are looking for does not exist.' })
       }
 
-      return req.user = user
+      return req.body.user = user
     }
 
-    app.get('/', {
+    app.get<{
+      Querystring: {
+        page: number
+        limit: number
+      }
+    }>('/', {
       schema: {
         querystring: {
           type: 'object',
@@ -45,7 +68,7 @@ export default class Users extends Route {
       let users = await app.database.getUsersSorted()
       const page = req.query.page ? parseInt(req.query.page) : 1
       const limit = req.query.limit ? parseInt(req.query.limit) : 25
-      const pages = (userCount) => Math.ceil(userCount / limit)
+      const pages = (userCount: number) => Math.ceil(userCount / limit)
 
       const count = users.length
       users = users.slice((page - 1) * limit, page * limit)
@@ -57,7 +80,9 @@ export default class Users extends Route {
       }
     })
 
-    app.post('/', {
+    app.post<{
+      Body: IBody
+    }>('/', {
       config: {
         rateLimit: {
           max: 5, timeWindow: 1000
@@ -112,17 +137,20 @@ export default class Users extends Route {
       },
       preHandler: [getUser]
     }, async (req) => {
-      return req.user
+      return req.body.user
     })
 
-    app.post('/:id/password/update', {
+    app.post<{
+      Params: IParams
+      Body: IBody
+    }>('/:id/password/update', {
       preHandler: [getUser]
     }, async (req, reply) => {
       const { password, newPassword } = req.body
       if (!password || !newPassword) return reply.status(400).send({ message: 'Invalid body provided' })
       if (password === newPassword) return reply.status(400).send({ message: 'Passwords have to be different' })
 
-      const user = await app.database.getUserWithFields(req.user.id, ['password'])
+      const user = await app.database.getUserWithFields(req.body.user.id, ['password'])
 
       const comparePassword = await bcrypt.compare(password, user?.password ?? '')
       if (!comparePassword) return reply.status(401).send({ message: 'Current password is incorrect' })
@@ -140,7 +168,7 @@ export default class Users extends Route {
       }
 
       const passwordEditedAt = dayjs().utc().toDate()
-      await app.database.updateUser(req.user.id,
+      await app.database.updateUser(req.body.user.id,
         {
           password: hash,
           passwordEditedAt
