@@ -5,10 +5,6 @@ import { Route } from '../structures'
 import { generatePassword } from '../utils'
 import crypto from 'node:crypto'
 import bcrypt from 'bcrypt'
-import dayjs from 'dayjs'
-import utcPlugin from 'dayjs/plugin/utc'
-
-dayjs.extend(utcPlugin)
 
 interface IParams {
   id: string
@@ -150,7 +146,7 @@ export default class Users extends Route {
       if (!password || !newPassword) return reply.status(400).send({ message: 'Invalid body provided' })
       if (password === newPassword) return reply.status(400).send({ message: 'Passwords have to be different' })
 
-      const user = await app.database.getUserWithFields(req.body.user.id, ['password'])
+      const user = await app.database.getUserCredentialsWithFields(req.body.user.id, ['password'])
 
       const comparePassword = await bcrypt.compare(password, user?.password ?? '')
       if (!comparePassword) return reply.status(401).send({ message: 'Current password is incorrect' })
@@ -167,11 +163,11 @@ export default class Users extends Route {
         return reply.status(401).send({ message: 'There was a problem processing your account' })
       }
 
-      const passwordEditedAt = dayjs().utc().toDate()
-      await app.database.updateUser(req.body.user.id,
+      const currentTimestamp = +new Date()
+      await app.database.updateUserCredentials(req.body.user.id,
         {
           password: hash,
-          passwordEditedAt
+          modifiedAt: currentTimestamp
         }
       )
 
