@@ -1,5 +1,11 @@
+import type { FastifyInstance, RegisterOptions, DoneFuncWithErrOrRes } from 'fastify'
+
 import { Route } from '../structures'
 import { filesize } from 'filesize'
+
+interface IParams {
+  id: string
+}
 
 export default class Files extends Route {
   constructor() {
@@ -10,8 +16,29 @@ export default class Files extends Route {
     })
   }
 
-  routes(app, _options, done) {
-    app.get('/', async (req) => {
+  routes(app: FastifyInstance, _options: RegisterOptions, done: DoneFuncWithErrOrRes) {
+    app.get<{
+      Querystring: {
+        search?: string
+        sort?: string
+        order?: 'asc' | 'desc'
+        page?: number
+        limit?: number
+      }
+    }>('/', {
+      schema: {
+        querystring: {
+          type: 'object',
+          properties: {
+            search: { type: 'string' },
+            sort: { type: 'string' },
+            order: { type: 'string' },
+            page: { type: 'number' },
+            limit: { type: 'number' }
+          }
+        }
+      }
+    }, async (req) => {
       const page = req.query.page ? parseInt(req.query.page) : 1
       const limit = req.query.limit ? parseInt(req.query.limit) : 25
 
@@ -34,7 +61,12 @@ export default class Files extends Route {
       }
     })
 
-    app.get('/:id', {
+    app.get<{
+      Params: IParams
+      Querystring: {
+        includeAlbum?: boolean
+      }
+    }>('/:id', {
       schema: {
         params: {
           type: 'object',
