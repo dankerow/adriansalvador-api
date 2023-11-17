@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 
 /**
  * Provides some logs for info, errors and warns
- * @typedef {Logger} Logger
+ * @class Logger
  */
 export class Logger {
   /**
