@@ -33,8 +33,8 @@ export default class Files extends Route {
             search: { type: 'string' },
             sort: { type: 'string' },
             order: { type: 'string' },
-            page: { type: 'number' },
-            limit: { type: 'number' }
+            page: { type: 'integer', minimum: 1 },
+            limit: { type: 'integer', minimum: -1 }
           }
         }
       }
