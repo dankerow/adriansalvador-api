@@ -39,13 +39,18 @@ export default class Files extends Route {
         }
       }
     }, async (req) => {
-      const page = req.query.page ? parseInt(req.query.page) : 1
-      const limit = req.query.limit ? parseInt(req.query.limit) : 25
+      const {
+        search = null,
+        sort = 'lowerName',
+        order = 'asc',
+        page = 1,
+        limit = 25
+      } = req.query
 
       const params = {
-        search: req.query.search ?? null,
-        sort: req.query.sort ?? 'lowerName',
-        order: req.query.order ?? 'asc',
+        search,
+        sort,
+        order,
         limit,
         skip: (page - 1) * limit
       }
