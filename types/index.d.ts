@@ -1,5 +1,6 @@
-import type { Database } from '../src/managers'
-import type { Logger } from '../src/utils'
+import type { Database } from '@/services'
+import type { Logger } from '@/utils'
+import type { User } from './user'
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -9,6 +10,10 @@ declare module 'fastify' {
 
   interface FastifyContextConfig {
     auth?: boolean
+  }
+
+  interface FastifyRequest {
+    user?: Omit<User, 'password'>
   }
 }
 
