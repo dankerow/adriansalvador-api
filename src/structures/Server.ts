@@ -12,7 +12,7 @@ import rateLimit from '@fastify/rate-limit'
 import sentry from '@immobiliarelabs/fastify-sentry'
 import * as jwt from 'jsonwebtoken'
 
-import { Database } from '@/managers'
+import { Database } from '@/services'
 import { Logger as logger } from '@/utils'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -61,7 +61,7 @@ export class Server {
           if (req.headers.authorization) {
             const token = req.headers.authorization.split(' ')[1]
             try {
-              const decoded = jwt.verify(token, process.env.JWT_SECRET) as { id: string }
+              const decoded = jwt.verify(token, process.env.AUTH_SECRET) as { id: string }
 
               return decoded.id
             } catch (err) {

@@ -3,8 +3,8 @@ import 'dotenv/config'
 import crypto from 'node:crypto'
 import bcrypt from 'bcrypt'
 
-import { Database } from '../src/managers'
-import { generatePassword } from '../src/utils'
+import { Database } from '@/services'
+import { generatePassword } from '@/utils'
 
 const database = new Database()
 await database.connect()
