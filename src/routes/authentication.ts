@@ -51,14 +51,14 @@ export default class Authentication extends Route {
 
       const user = await app.database.getUserByEmail(email)
       if (!user) {
-        return reply.code(403).send({ error: { message: 'Invalid credentials.' } })
+        return reply.code(401).send({ error: { message: 'Invalid credentials.' } })
       }
 
       const userCredentials = await app.database.getUserCredentials(user.id)
 
       const passwordVerification = await bcrypt.compare(password, userCredentials.password)
       if (!passwordVerification) {
-        return reply.code(403).send({ error: { message: 'Invalid credentials.' } })
+        return reply.code(401).send({ error: { message: 'Invalid credentials.' } })
       }
 
       const token = createToken(user)
