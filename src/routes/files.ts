@@ -20,7 +20,7 @@ export default class Files extends Route {
     app.get<{
       Querystring: {
         search?: string
-        sort?: string
+        sort?: 'lowerName' | 'createdAt' | 'modifiedAt'
         order?: 'asc' | 'desc'
         page?: number
         limit?: number
@@ -30,9 +30,9 @@ export default class Files extends Route {
         querystring: {
           type: 'object',
           properties: {
-            search: { type: 'string' },
-            sort: { type: 'string' },
-            order: { type: 'string' },
+            search: { type: 'string', maxLength: 100 },
+            sort: { type: 'string', enum: ['lowerName', 'createdAt', 'modifiedAt'] },
+            order: { type: 'string', enum: ['asc', 'desc'] },
             page: { type: 'integer', minimum: 1 },
             limit: { type: 'integer', minimum: -1 }
           }
