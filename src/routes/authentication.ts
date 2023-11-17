@@ -8,7 +8,6 @@ import jwt from 'jsonwebtoken'
 interface IBody {
   email: string
   password: string
-  user?: User
 }
 
 export default class Authentication extends Route {
@@ -71,10 +70,8 @@ export default class Authentication extends Route {
       return { token, user }
     })
 
-    app.get<{
-      Body: IBody
-    }>('/verify', (req) => {
-      return req.body.user
+    app.get('/verify', (req) => {
+      return req.user
     })
 
     done()
