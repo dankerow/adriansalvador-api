@@ -1,13 +1,8 @@
-import type { User } from '@/types'
 import type { FastifyReply, FastifyRequest, DoneFuncWithErrOrRes } from 'fastify'
 
 import jwt from 'jsonwebtoken'
 
-interface IBody {
-  user: Omit<User, 'password'>
-}
-
-export default function (req: FastifyRequest<{ Body: IBody }>, reply: FastifyReply, done: DoneFuncWithErrOrRes) {
+export default function (req: FastifyRequest, reply: FastifyReply, done: DoneFuncWithErrOrRes) {
   if (!req.headers.authorization) {
     return reply.status(401).send({ message: 'No authorization header provided' })
   }
@@ -32,7 +27,7 @@ export default function (req: FastifyRequest<{ Body: IBody }>, reply: FastifyRep
       return reply.status(401).send({ message: 'User doesn\'t exist' })
     }
 
-    req.body.user = user
+    req.user = user
     done()
   })
 }
