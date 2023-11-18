@@ -92,6 +92,7 @@ export class Server {
     })
 
     await this.initializeDatabase()
+    await this.loadRoutes(join('src', 'routes'))
   }
 
   /**
@@ -109,8 +110,6 @@ export class Server {
     })
 
     process.send({ type: 'log', content: 'Successfully connected to database.' })
-
-    await this.loadRoutes(join('src', 'routes'))
   }
 
   /**
