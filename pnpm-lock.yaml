@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@fastify/session':
+    specifier: ^10.5.0
+    version: 10.5.0
   '@google-analytics/data':
     specifier: ^4.0.1
     version: 4.0.1
@@ -359,6 +362,13 @@ packages:
       fastify-plugin: 4.3.0
       toad-cache: 3.3.0
     dev: true
+
+  /@fastify/session@10.5.0:
+    resolution: {integrity: sha512-2oXXSQ4Yy6pzLgbBoooblgHJ55DYqyxSLoKMq2CGmDZI2WPMrOIvN1bJbllWuUuCe7luPdQju3RJTRvNMW+j/g==}
+    dependencies:
+      fastify-plugin: 4.3.0
+      safe-stable-stringify: 2.4.1
+    dev: false
 
   /@google-analytics/data@4.0.1:
     resolution: {integrity: sha512-YhxMQuno21LF7W9sLZMPBuxJoRQ/A50kFvGJuZUmD4girm5PyEQDpew6vooUh7GjMcfpvM8b1XIIFk6pyFaBjA==}
@@ -1561,7 +1571,6 @@ packages:
 
   /fastify-plugin@4.3.0:
     resolution: {integrity: sha512-M3+i368lV0OYTJ5TfClIoPKEKSOF7112iiPdwgfSR0gN98BjA1Nk+c6oBHtfcVt9KiMxl+EQKHC1QNWo3ZOpYQ==}
-    dev: true
 
   /fastify@4.24.3:
     resolution: {integrity: sha512-6HHJ+R2x2LS3y1PqxnwEIjOTZxFl+8h4kSC/TuDPXtA+v2JnV9yEtOsNSKK1RMD7sIR2y1ZsA4BEFaid/cK5pg==}
@@ -2826,7 +2835,6 @@ packages:
   /safe-stable-stringify@2.4.1:
     resolution: {integrity: sha512-dVHE6bMtS/bnL2mwualjc6IxEv1F+OCUpA46pKUj6F8uDbUM0jCCulPqRNPSnWwGNKx5etqMjZYdXtrm5KJZGA==}
     engines: {node: '>=10'}
-    dev: true
 
   /secure-json-parse@2.7.0:
     resolution: {integrity: sha512-6aU+Rwsezw7VR8/nyvKTx8QpWH9FrcYiXXlqC4z5d5XQBDRqtbfsRjnwGyqbi3gddNtWHuEk9OANUotL26qKUw==}
