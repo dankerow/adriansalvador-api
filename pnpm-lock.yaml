@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@fastify/cookie':
+    specifier: ^9.2.0
+    version: 9.2.0
   '@fastify/session':
     specifier: ^10.5.0
     version: 10.5.0
@@ -326,6 +329,13 @@ packages:
       ajv-formats: 2.1.1(ajv@8.11.0)
       fast-uri: 2.1.0
     dev: true
+
+  /@fastify/cookie@9.2.0:
+    resolution: {integrity: sha512-fkg1yjjQRHPFAxSHeLC8CqYuNzvR6Lwlj/KjrzQcGjNBK+K82nW+UfCjfN71g1GkoVoc1GTOgIWkFJpcMfMkHQ==}
+    dependencies:
+      cookie-signature: 1.2.1
+      fastify-plugin: 4.3.0
+    dev: false
 
   /@fastify/cors@8.4.1:
     resolution: {integrity: sha512-iYQJtrY3pFiDS5mo5zRaudzg2OcUdJ96PD6xfkKOOEilly5nnrFZx/W6Sce2T79xxlEn2qpU3t5+qS2phS369w==}
@@ -1094,6 +1104,11 @@ packages:
 
   /console-control-strings@1.1.0:
     resolution: {integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==}
+    dev: false
+
+  /cookie-signature@1.2.1:
+    resolution: {integrity: sha512-78KWk9T26NhzXtuL26cIJ8/qNHANyJ/ZYrmEXFzUmhZdjpBv+DlWlOANRTGBt48YcyslsLrj0bMLFTmXvLRCOw==}
+    engines: {node: '>=6.6.0'}
     dev: false
 
   /cookie@0.4.2:
