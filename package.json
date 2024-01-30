@@ -16,7 +16,7 @@
     "dev": "nodemon --import tsx ."
   },
   "dependencies": {
-    "@fastify/cookie": "^9.3.0",
+    "@fastify/cookie": "^9.3.1",
     "@fastify/session": "^10.7.0",
     "@google-analytics/data": "^4.3.0",
     "bcrypt": "^5.1.1",
@@ -32,13 +32,13 @@
     "@immobiliarelabs/fastify-sentry": "^8.0.0",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.5",
-    "@types/node": "^20.11.5",
-    "@typescript-eslint/eslint-plugin": "^6.19.0",
-    "@typescript-eslint/parser": "^6.19.0",
-    "dotenv": "^16.3.1",
+    "@types/node": "^20.11.10",
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+    "@typescript-eslint/parser": "^6.20.0",
+    "dotenv": "^16.4.1",
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.1",
-    "fastify": "4.25.2",
+    "fastify": "4.26.0",
     "nodemon": "^3.0.3",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"
@@ -50,5 +50,5 @@
     ],
     "delay": 2500
   },
-  "packageManager": "pnpm@8.14.1"
+  "packageManager": "pnpm@8.15.1"
 }
