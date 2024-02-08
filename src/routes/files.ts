@@ -22,6 +22,7 @@ export default class Files extends Route {
         search?: string
         sort?: 'lowerName' | 'createdAt' | 'modifiedAt'
         order?: 'asc' | 'desc'
+        includeAlbum?: boolean
         page?: number
         limit?: number
       }
@@ -31,8 +32,9 @@ export default class Files extends Route {
           type: 'object',
           properties: {
             search: { type: 'string', maxLength: 100 },
-            sort: { type: 'string', enum: ['lowerName', 'createdAt', 'modifiedAt'] },
+            sort: { type: 'string', enum: ['lowerName', 'name', 'size', 'createdAt', 'modifiedAt'] },
             order: { type: 'string', enum: ['asc', 'desc'] },
+            includeAlbum: { type: 'boolean' },
             page: { type: 'integer', minimum: 1 },
             limit: { type: 'integer', minimum: -1 }
           }
@@ -43,6 +45,7 @@ export default class Files extends Route {
         search = null,
         sort = 'lowerName',
         order = 'asc',
+        includeAlbum = false,
         page = 1,
         limit = 25
       } = req.query
@@ -51,6 +54,7 @@ export default class Files extends Route {
         search,
         sort,
         order,
+        includeAlbum,
         limit,
         skip: (page - 1) * limit
       }
