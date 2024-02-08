@@ -12,7 +12,6 @@ interface IBody extends Partial<Album> {
   name: string
   description: string
   image?: string
-  album?: Album
 }
 
 export default class Albums extends Route {
@@ -25,6 +24,8 @@ export default class Albums extends Route {
   }
 
   routes(app: FastifyInstance, _options: RegisterOptions, done: DoneFuncWithErrOrRes) {
+    app.decorateRequest('album', null)
+
     const getAlbum = async (req: FastifyRequest<{ Params: IParams; Body: IBody }>, reply: FastifyReply) => {
       if (!req.params.id) {
         return reply.code(404).send({
@@ -46,7 +47,7 @@ export default class Albums extends Route {
         })
       }
 
-      return req.body.album = album
+      return req.album = album
     }
 
     app.get<{
@@ -126,9 +127,9 @@ export default class Albums extends Route {
       },
       preHandler: [getAlbum]
     }, async (req) => {
-      req.body.album.fileCount = (await app.database.getAlbumFileCount(req.body.album.id))?.count ?? 0
+      req.album.fileCount = (await app.database.getAlbumFileCount(req.album.id))?.count ?? 0
 
-      return req.body.album
+      return req.album
     })
 
     app.post<{
@@ -136,7 +137,7 @@ export default class Albums extends Route {
     }>('/:id/publish', {
       preHandler: [getAlbum]
     }, async (req) => {
-      return await app.database.updateAlbum(req.body.album.id, { draft: false, postedAt: +new Date() })
+      return await app.database.updateAlbum(req.album.id, { draft: false, postedAt: +new Date() })
     })
 
     app.post<{
@@ -144,7 +145,7 @@ export default class Albums extends Route {
     }>('/:id/unpublish', {
       preHandler: [getAlbum]
     }, async (req) => {
-      return await app.database.updateAlbum(req.body.album.id, { draft: true, postedAt: null })
+      return await app.database.updateAlbum(req.album.id, { draft: true, postedAt: null })
     })
 
     app.get<{
@@ -179,7 +180,7 @@ export default class Albums extends Route {
       const limit = req.query.limit ? parseInt(req.query.limit) : 25
       const pages = (imageCount: number) => Math.ceil(imageCount / limit)
 
-      let files = await app.database.getAlbumFiles(req.body.album.id)
+      let files = await app.database.getAlbumFiles(req.album.id)
       const count = files.length
 
       if (limit !== -1) { // -1 means no limit
