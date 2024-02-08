@@ -210,11 +210,17 @@ export class Database extends EventEmitter {
       .toArray()
   }
 
-  getFiles(params: { search?: string; sort?: string; order?: string; skip?: number; limit?: number } = {}): Promise<WithId<AlbumFile>[]> {
+  getFiles(params: { search?: string; sort?: string; order?: string; includeAlbum?: boolean; skip?: number; limit?: number } = {}): Promise<WithId<AlbumFile>[]> {
     const aggregation = []
 
     if (params.search) aggregation.push({ $match: { name: { $regex: params.search, $options: 'i' } } })
     if (params.sort) aggregation.push({ $addFields: { lowerName: { $toLower: '$name' } } }, { $sort: { [params.sort]: params.order === 'asc' ? 1 : -1 } })
+    if (params.includeAlbum) {
+      aggregation.push(
+        { $lookup: { from: 'albums', localField: 'albumId', foreignField: 'id', as: 'album' } },
+        { $addFields: { album: { $arrayElemAt: ['$album', 0] } } }
+      )
+    }
     if (params.skip) aggregation.push({ $skip: params.skip })
     if (params.limit) aggregation.push({ $limit: params.limit })
 
