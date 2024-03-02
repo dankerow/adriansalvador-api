@@ -23,7 +23,7 @@
     "dayjs": "^1.11.10",
     "filesize": "^10.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.3.0"
+    "mongodb": "^6.4.0"
   },
   "devDependencies": {
     "@fastify/cors": "^9.0.1",
@@ -31,12 +31,12 @@
     "@fastify/rate-limit": "^9.1.0",
     "@immobiliarelabs/fastify-sentry": "^8.0.0",
     "@types/bcrypt": "^5.0.2",
-    "@types/jsonwebtoken": "^9.0.5",
-    "@types/node": "^20.11.20",
-    "@typescript-eslint/eslint-plugin": "^7.0.2",
-    "@typescript-eslint/parser": "^7.0.2",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.11.24",
+    "@typescript-eslint/eslint-plugin": "^7.1.0",
+    "@typescript-eslint/parser": "^7.1.0",
     "dotenv": "^16.4.5",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
     "fastify": "4.26.1",
     "nodemon": "^3.1.0",
@@ -50,5 +50,5 @@
     ],
     "delay": 2500
   },
-  "packageManager": "pnpm@8.15.3"
+  "packageManager": "pnpm@8.15.4"
 }
