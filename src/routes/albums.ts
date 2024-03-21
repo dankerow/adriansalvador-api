@@ -81,16 +81,24 @@ export default class Albums extends Route {
         }
       }
     }, async (req) => {
-      const page = req.query.page ? parseInt(req.query.page) : 1
-      const limit = req.query.limit ? parseInt(req.query.limit) : 25
+      const {
+        status = 'posted',
+        favorites = null,
+        featured = null,
+        search = null,
+        sort = 'lowerName',
+        order = 'asc',
+        page = 1,
+        limit = 25
+      } = req.query
 
       const params = {
-        status: req.query.status ?? 'posted',
-        favorites: req.query.favorites ?? null,
-        featured: req.query.featured ?? null,
-        search: req.query.search ?? null,
-        sort: req.query.sort ?? 'lowerName',
-        order: req.query.order ?? 'asc',
+        status,
+        search,
+        favorites,
+        featured,
+        sort,
+        order,
         limit,
         skip: (page - 1) * limit
       }
@@ -176,8 +184,10 @@ export default class Albums extends Route {
       },
       preHandler: [getAlbum]
     }, async (req) => {
-      const page = req.query.page ? parseInt(req.query.page) : 1
-      const limit = req.query.limit ? parseInt(req.query.limit) : 25
+      const {
+        page = 1,
+        limit = 25
+      } = req.query
       const pages = (imageCount: number) => Math.ceil(imageCount / limit)
 
       let files = await app.database.getAlbumFiles(req.album.id)
