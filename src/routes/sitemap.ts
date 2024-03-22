@@ -16,11 +16,11 @@ export default class Sitemap extends Route {
       const albums = await app.database.getAlbums({ sort: { name: 1 } })
 
       for (const album of albums) {
-        const images = await app.database.getAlbumFiles(album.id)
+        const images = await app.database.getAlbumFiles(album._id)
         const cdnURL = process.env.CDN_BASE_URL
 
         routes.push({
-          loc: `/albums/${album.id}`,
+          loc: `/albums/${album._id}`,
           changefreq: 'monthly',
           lastmod: new Date(album.modifiedAt),
           priority: 0.8,
