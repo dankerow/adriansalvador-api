@@ -1,5 +1,7 @@
+import type { ObjectId } from 'mongodb'
+
 export interface UserMetadata {
-  readonly id: string
+  readonly _id: ObjectId
   firstName: string
   lastName: string
   readonly createdAt: number
@@ -7,7 +9,7 @@ export interface UserMetadata {
 }
 
 export interface UserCredentials {
-  readonly id: string
+  readonly _id: ObjectId
   email: string
   password: string
   readonly createdAt: number
