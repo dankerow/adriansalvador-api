@@ -1,5 +1,7 @@
+import type { ObjectId } from 'mongodb'
+
 export interface AlbumFile {
-  readonly id: string
+  readonly _id: ObjectId
   name: string
   url?: string
   type: string
@@ -13,7 +15,7 @@ export interface AlbumFile {
 }
 
 export interface Album {
-  readonly id: string
+  readonly _id: ObjectId
   name: string
   url?: string
   draft: boolean
